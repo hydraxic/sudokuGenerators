@@ -1,6 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
- 
+
+static class RandomExtensions
+{
+    public static void Shuffle<T> (this Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+}
+
 public class Sudoku
 {
     int[,] mat;
@@ -10,6 +25,9 @@ public class Sudoku
 
     // dictionary for converting 9-0, 8-1, 7-2, etc.
     Dictionary<int, int> convertRight = new Dictionary<int, int>();
+ 
+    public int[] diagrandom = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    public int[] diagrandom2 = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     // Constructor
     public Sudoku(int N, int K)
@@ -38,6 +56,11 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
+        var rng = new Random();
+        rng.Shuffle(diagrandom);
+        rng.Shuffle(diagrandom);
+        rng.Shuffle(diagrandom2);
+        rng.Shuffle(diagrandom2);
         fillDiag(-1);
         // Fill for diag
         //fillRemainingDiag();
@@ -50,7 +73,7 @@ public class Sudoku
         // Remove Randomly K digits to make game
         removeKDigits();
     }
- 
+
     // Fill the diagonal SRN number of SRN x SRN matrices
     void fillDiagonal()
     {
@@ -106,14 +129,22 @@ public class Sudoku
     {
         return (unUsedInRow(i, num) &&
             unUsedInCol(j, num) &&
-            //unUsedInDiagLeft(num) &&
-            //unUsedInDiagRight(num) &&
             unUsedInBox(i-i%SRN, j-j%SRN, num));
     }
  
-    bool checkifsafediag(int num)
+    bool checkifsafediagleft(int num, int l)
     {
-        return (unUsedInDiagLeft(num)); //&& unUsedInDiagRight(num));
+        Console.WriteLine(l);
+        return (unUsedInDiagLeft(num) &&
+        unUsedInCol(l, num) &&
+        unUsedInRow(l, num));
+    }
+
+    bool checkifsafediagright(int num, int l, int l2)
+    {
+        return (unUsedInDiagRight(num) &&
+        unUsedInCol(l2, num) &&
+        unUsedInRow(l, num));
     }
 
     // check in the row for existence
@@ -191,7 +222,7 @@ public class Sudoku
 
     bool fillDiag(int l)
     {
-        if (l >= N)
+        if (l >= N-1)
         {
             return false;
         }
@@ -200,19 +231,28 @@ public class Sudoku
             l++;
         }
 
-        for (int num = 1; num<=N; num++)
+        foreach (int i in diagrandom)
         {
-            if (checkifsafediag(num))
+            Console.WriteLine(l);
+            if (checkifsafediagleft(i, l))
             {
-                Console.WriteLine(l);
-                mat[l,l] = num;
-                if (fillDiag(l))
-                {
-                    return true;
-                }
-                mat[l,l] = 0;
+                mat[l,l] = i;
             }
         }
+        foreach(int i in diagrandom2)
+        {
+            int findL = convertRight[l];
+            if (checkifsafediagright(i, l, findL))
+            {
+                int changeL = convertRight[i-1];
+                mat[l, changeL] = i;
+            }
+        }
+        if (fillDiag(l))
+            {
+                return true;
+            }
+            //mat[l,l] = 0;
         return false;
     }
     // A recursive function to fill remaining
