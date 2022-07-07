@@ -204,12 +204,13 @@ public class Sudoku
         {
             if (checkifsafediag(num))
             {
-                mat[l,l] = num;
+                Console.WriteLine(l);
+                mat[l-1,l-1] = num;
                 if (fillDiag(l))
                 {
                     return true;
                 }
-                mat[l,l] = 0;
+                mat[l-1,l-1] = 0;
             }
         }
         return false;

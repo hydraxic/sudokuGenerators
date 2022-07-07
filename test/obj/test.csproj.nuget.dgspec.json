@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {}
+    "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {}
   },
   "projects": {
-    "d:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {
+    "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectUniqueName": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
         "projectName": "test",
-        "projectPath": "d:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectPath": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
         "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-        "outputPath": "d:\\Files\\repos\\diagonalSudokuGenerator\\test\\obj\\",
+        "outputPath": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config",
