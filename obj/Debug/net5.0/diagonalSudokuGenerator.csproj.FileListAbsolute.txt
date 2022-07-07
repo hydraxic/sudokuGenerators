@@ -1,0 +1,16 @@
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.exe
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.deps.json
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.runtimeconfig.json
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.runtimeconfig.dev.json
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.dll
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\ref\diagonalSudokuGenerator.dll
+D:\Files\repos\diagonalSudokuGenerator\bin\Debug\net5.0\diagonalSudokuGenerator.pdb
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.csproj.AssemblyReference.cache
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.GeneratedMSBuildEditorConfig.editorconfig
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.AssemblyInfoInputs.cache
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.AssemblyInfo.cs
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.csproj.CoreCompileInputs.cache
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.dll
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\ref\diagonalSudokuGenerator.dll
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.pdb
+D:\Files\repos\diagonalSudokuGenerator\obj\Debug\net5.0\diagonalSudokuGenerator.genruntimeconfig.cache
