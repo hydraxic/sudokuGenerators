@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
  
 public class Sudoku
 {
@@ -6,12 +7,26 @@ public class Sudoku
     int N; // number of columns/rows.
     int SRN; // square root of N
     int K; // No. Of missing digits
- 
+
+    // dictionary for converting 9-0, 8-1, 7-2, etc.
+    Dictionary<int, int> convertRight = new Dictionary<int, int>();
+
     // Constructor
     public Sudoku(int N, int K)
     {
         this.N = N;
         this.K = K;
+
+        // adding cRight digits
+        convertRight.Add(8, 0);
+        convertRight.Add(7, 1);
+        convertRight.Add(6, 2);
+        convertRight.Add(5, 3);
+        convertRight.Add(4, 4);
+        convertRight.Add(3, 5);
+        convertRight.Add(2, 6);
+        convertRight.Add(1, 7);
+        convertRight.Add(0, 8);
  
         // Compute square root of N
         double SRNd = Math.Sqrt(N);
@@ -28,6 +43,9 @@ public class Sudoku
  
         // Fill remaining blocks
         fillRemaining(0, SRN);
+
+        // Fill for diag
+        //fillRemainingDiag();
  
         // Remove Randomly K digits to make game
         removeKDigits();
@@ -84,20 +102,22 @@ public class Sudoku
     bool CheckIfSafe(int i,int j,int num)
     {
         return (unUsedInRow(i, num) &&
-                unUsedInCol(j, num) &&
-                unUsedInBox(i-i%SRN, j-j%SRN, num));
+            unUsedInCol(j, num) &&
+            unUsedInDiagLeft(num) &&
+            unUsedInDiagRight(num) &&
+            unUsedInBox(i-i%SRN, j-j%SRN, num));
     }
  
     // check in the row for existence
     bool unUsedInRow(int i,int num)
     {
         for (int j = 0; j<N; j++)
-           if (mat[i,j] == num)
+            if (mat[i,j] == num)
                 return false;
         return true;
     }
  
-    // check in the row for existence
+    // check in the column for existence
     bool unUsedInCol(int j,int num)
     {
         for (int i = 0; i<N; i++)
@@ -105,7 +125,61 @@ public class Sudoku
                 return false;
         return true;
     }
- 
+
+    // trying to get diagonal check
+    bool unUsedInDiagLeft(int num)
+    {
+        for (int l = 0; l < N; l++)
+        {
+            if (mat[l, l] == num)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool unUsedInDiagRight(int num)
+    {
+        for (int l = N-1; l <= 0; l--)
+        {
+            int lOther = convertRight[l];
+            if (mat[l, lOther] == num)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+/*
+    void fillRemainingDiag()
+    {
+        for (int r = 1; r <= N; r++)
+        {
+            if (unUsedInDiag(r))
+            {
+                mat[r-1, r-1] = r;
+                /*
+                if (fillRemaining(i, j+1))
+                    return true;
+                mat[i,j] = 0;
+                end comment here                
+            }
+        }
+        for (int r = 9; r >= N; r--)
+        {
+            if (unUsedInDiag(r))
+            {
+                mat[r-1, r-1] = r;
+                /*
+                if (fillRemaining(i, j+1))
+                    return true;
+                mat[i,j] = 0;
+                end comment here
+            }
+        }
+    }
+ */
     // A recursive function to fill remaining
     // matrix
     bool fillRemaining(int i, int j)
@@ -146,7 +220,6 @@ public class Sudoku
                 mat[i,j] = num;
                 if (fillRemaining(i, j+1))
                     return true;
- 
                 mat[i,j] = 0;
             }
         }
@@ -193,7 +266,7 @@ public class Sudoku
     // Driver code
     public static void Main(string[] args)
     {
-        int N = 9, K = 20;
+        int N = 9, K = 0;
         Sudoku sudoku = new Sudoku(N, K);
         sudoku.fillValues();
         sudoku.printSudoku();

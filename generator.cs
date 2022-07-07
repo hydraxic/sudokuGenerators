@@ -85,6 +85,7 @@ public class Sudoku
     {
         return (unUsedInRow(i, num) &&
                 unUsedInCol(j, num) &&
+                unUsedInDiag(num) && 
                 unUsedInBox(i-i%SRN, j-j%SRN, num));
     }
  
@@ -92,17 +93,30 @@ public class Sudoku
     bool unUsedInRow(int i,int num)
     {
         for (int j = 0; j<N; j++)
-           if (mat[i,j] == num)
+            if (mat[i,j] == num)
                 return false;
         return true;
     }
  
-    // check in the row for existence
+    // check in the column for existence
     bool unUsedInCol(int j,int num)
     {
         for (int i = 0; i<N; i++)
             if (mat[i,j] == num)
                 return false;
+        return true;
+    }
+
+    // trying to get diagonal check
+    bool unUsedInDiag(int num)
+    {
+        for (int l = 0; l < N; l++)
+        {
+            if (mat[l, l] == num)
+            {
+                return false;
+            }
+        }
         return true;
     }
  
