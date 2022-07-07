@@ -38,14 +38,14 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
-        // Fill the diagonal of SRN x SRN matrices
-        fillDiagonal();
- 
-        // Fill remaining blocks
-        fillRemaining(0, SRN);
-
+        fillDiag(0);
         // Fill for diag
         //fillRemainingDiag();
+
+        // Fill the diagonal of SRN x SRN matrices
+        fillDiagonal();
+        // Fill remaining blocks
+        fillRemaining(0, SRN);
  
         // Remove Randomly K digits to make game
         removeKDigits();
@@ -80,13 +80,16 @@ public class Sudoku
         {
             for (int j=0; j<SRN; j++)
             {
-                do
+                if (i != j)
                 {
-                    num = randomGenerator(N);
+                    do
+                    {
+                        num = randomGenerator(N);
+                    }
+                    while (!unUsedInBox(row, col, num));
+    
+                    mat[row+i,col+j] = num;
                 }
-                while (!unUsedInBox(row, col, num));
- 
-                mat[row+i,col+j] = num;
             }
         }
     }
@@ -103,11 +106,16 @@ public class Sudoku
     {
         return (unUsedInRow(i, num) &&
             unUsedInCol(j, num) &&
-            unUsedInDiagLeft(num) &&
-            unUsedInDiagRight(num) &&
+            //unUsedInDiagLeft(num) &&
+            //unUsedInDiagRight(num) &&
             unUsedInBox(i-i%SRN, j-j%SRN, num));
     }
  
+    bool checkifsafediag(int num)
+    {
+        return (unUsedInDiagLeft(num)); //&& unUsedInDiagRight(num));
+    }
+
     // check in the row for existence
     bool unUsedInRow(int i,int num)
     {
@@ -180,6 +188,32 @@ public class Sudoku
         }
     }
  */
+
+    bool fillDiag(int l)
+    {
+        if (l >= N)
+        {
+            return false;
+        }
+        else
+        {
+            l++;
+        }
+
+        for (int num = 1; num<=N; num++)
+        {
+            if (checkifsafediag(num))
+            {
+                mat[l,l] = num;
+                if (fillDiag(l))
+                {
+                    return true;
+                }
+                mat[l,l] = 0;
+            }
+        }
+        return false;
+    }
     // A recursive function to fill remaining
     // matrix
     bool fillRemaining(int i, int j)
@@ -215,13 +249,17 @@ public class Sudoku
  
         for (int num = 1; num<=N; num++)
         {
-            if (CheckIfSafe(i, j, num))
+            if (i != j)
             {
-                mat[i,j] = num;
-                if (fillRemaining(i, j+1))
-                    return true;
-                mat[i,j] = 0;
+                if (CheckIfSafe(i, j, num))
+                {
+                    mat[i,j] = num;
+                    if (fillRemaining(i, j+1))
+                        return true;
+                    mat[i,j] = 0;
+                }
             }
+            //else {return false}
         }
         return false;
     }
