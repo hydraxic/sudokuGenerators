@@ -38,7 +38,7 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
-        fillDiag(0);
+        fillDiag(-1);
         // Fill for diag
         //fillRemainingDiag();
 
@@ -205,12 +205,12 @@ public class Sudoku
             if (checkifsafediag(num))
             {
                 Console.WriteLine(l);
-                mat[l-1,l-1] = num;
+                mat[l,l] = num;
                 if (fillDiag(l))
                 {
                     return true;
                 }
-                mat[l-1,l-1] = 0;
+                mat[l,l] = 0;
             }
         }
         return false;
