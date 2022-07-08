@@ -64,7 +64,7 @@ public class Sudoku
         fillDiag(-1);
         // Fill for diag
         //fillRemainingDiag();
-
+        Console.WriteLine("done diag");
         // Fill the diagonal of SRN x SRN matrices
         fillDiagonal();
         // Fill remaining blocks
@@ -134,7 +134,6 @@ public class Sudoku
  
     bool checkifsafediagleft(int num, int l)
     {
-        Console.WriteLine(l);
         return (unUsedInDiagLeft(num) &&
         unUsedInCol(l, num) &&
         unUsedInRow(l, num));
@@ -231,9 +230,10 @@ public class Sudoku
             l++;
         }
 
+        Console.WriteLine("here");
+
         foreach (int i in diagrandom)
         {
-            Console.WriteLine(l);
             if (checkifsafediagleft(i, l))
             {
                 mat[l,l] = i;
