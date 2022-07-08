@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-static class RandomExtensions
+static class Extensions
 {
     public static void Shuffle<T> (this Random rng, T[] array)
     {
@@ -13,6 +13,17 @@ static class RandomExtensions
             array[n] = array[k];
             array[k] = temp;
         }
+    }
+    public static T[] RemoveAt<T>(this T[] source, int index)
+    {
+        T[] dest = new T[source.Length - 1];
+        if( index > 0 )
+            Array.Copy(source, 0, dest, 0, index);
+
+        if( index < source.Length - 1 )
+            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+
+        return dest;
     }
 }
 
@@ -28,6 +39,31 @@ public class Sudoku
  
     public int[] diagrandom = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
     public int[] diagrandom2 = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    public (int, int)[] doNotOverwriteGrids = new[] {
+        (0, 0),
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (8, 0),
+        (7, 1),
+        (6, 2),
+        (5, 3),
+        (4, 4),
+        (3, 5),
+        (2, 6),
+        (1, 7),
+        (0, 8)
+    };
+
+    static int num = 8;
+    static int [] buf = new int [num];
+    static bool [] used = new bool [num];
 
     // Constructor
     public Sudoku(int N, int K)
@@ -56,12 +92,19 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
+        int toRemove = randomGenerator(N);
+        diagrandom = diagrandom.RemoveAt(toRemove-1);
+        diagrandom2 = diagrandom2.RemoveAt(toRemove-1);
+        //Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        //Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
         var rng = new Random();
         rng.Shuffle(diagrandom);
         rng.Shuffle(diagrandom);
         rng.Shuffle(diagrandom2);
         rng.Shuffle(diagrandom2);
-        fillDiag(-1);
+        int[] need = new int[] {-1, toRemove};
+        //Console.WriteLine("[{0}]", string.Join(", ", derange()));
+        //fillDiag(need);
         // Fill for diag
         //fillRemainingDiag();
         Console.WriteLine("done diag");
@@ -72,6 +115,28 @@ public class Sudoku
  
         // Remove Randomly K digits to make game
         removeKDigits();
+    }
+
+    int[] derange()
+    {
+        for (int i = 0; i < num; i++) used [i] = false;
+        return rec(0);
+    }
+ 
+    int[] rec(int ind)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            if (!used [i] && i != ind)
+            {
+                used [i] = true;
+                buf [ind] = i;
+	            if (ind + 1 < num) rec(ind + 1);
+                else return buf;
+	            used [i] = false;
+            }
+        }
+        return buf;
     }
 
     // Fill the diagonal SRN number of SRN x SRN matrices
@@ -103,7 +168,8 @@ public class Sudoku
         {
             for (int j=0; j<SRN; j++)
             {
-                if (i != j)
+                (double ii, int jj) gridLocation = (i, j);
+                if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation))
                 {
                     do
                     {
@@ -219,8 +285,11 @@ public class Sudoku
     }
  */
 
-    bool fillDiag(int l)
+    bool fillDiag(int[] listofneeded)
     {
+        int l = listofneeded[0];
+        int toRemove = listofneeded[1];
+
         if (l >= N-1)
         {
             return false;
@@ -234,21 +303,35 @@ public class Sudoku
 
         foreach (int i in diagrandom)
         {
-            if (checkifsafediagleft(i, l))
+            if (i != 4)
             {
-                mat[l,l] = i;
+                if (checkifsafediagleft(i, l))
+                {
+                    mat[l,l] = i;
+                }
+            }
+            else
+            {
+                mat[4, 4] = toRemove;
             }
         }
         foreach(int i in diagrandom2)
         {
-            int findL = convertRight[l];
-            if (checkifsafediagright(i, l, findL))
+            if (i != 4)
             {
-                int changeL = convertRight[i-1];
-                mat[l, changeL] = i;
+                int findL = convertRight[l];
+                if (checkifsafediagright(i, l, findL))
+                {
+                    int changeL = convertRight[i-1];
+                    mat[l, changeL] = i;
+                }
+            }
+            else
+            {
+                mat[4, 4] = toRemove;
             }
         }
-        if (fillDiag(l))
+        if (fillDiag(listofneeded))
             {
                 return true;
             }
@@ -290,7 +373,8 @@ public class Sudoku
  
         for (int num = 1; num<=N; num++)
         {
-            if (i != j)
+            (double ii, int jj) gridLocation2 = (i, j);
+            if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation2))
             {
                 if (CheckIfSafe(i, j, num))
                 {

@@ -1,6 +1,32 @@
 using System;
 using System.Collections.Generic;
- 
+
+static class Extensions
+{
+    public static void Shuffle<T> (this Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+    public static T[] RemoveAt<T>(this T[] source, int index)
+    {
+        T[] dest = new T[source.Length - 1];
+        if( index > 0 )
+            Array.Copy(source, 0, dest, 0, index);
+
+        if( index < source.Length - 1 )
+            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+
+        return dest;
+    }
+}
+
 public class Sudoku
 {
     int[,] mat;
@@ -10,6 +36,30 @@ public class Sudoku
 
     // dictionary for converting 9-0, 8-1, 7-2, etc.
     Dictionary<int, int> convertRight = new Dictionary<int, int>();
+ 
+    public int[] diagrandom = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    public int[] diagrandom2 = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    public (int, int)[] doNotOverwriteGrids = new[] {
+        (0, 0),
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (8, 0),
+        (7, 1),
+        (6, 2),
+        (5, 3),
+        (4, 4),
+        (3, 5),
+        (2, 6),
+        (1, 7),
+        (0, 8)
+    };
 
     // Constructor
     public Sudoku(int N, int K)
@@ -38,19 +88,29 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
-        // Fill the diagonal of SRN x SRN matrices
-        fillDiagonal();
- 
-        // Fill remaining blocks
-        fillRemaining(0, SRN);
-
+        int toRemove = randomGenerator(N);
+        diagrandom = diagrandom.RemoveAt(toRemove);
+        diagrandom2 = diagrandom2.RemoveAt(toRemove);
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+        var rng = new Random();
+        rng.Shuffle(diagrandom);
+        rng.Shuffle(diagrandom);
+        rng.Shuffle(diagrandom2);
+        rng.Shuffle(diagrandom2);
+        fillDiag(-1);
         // Fill for diag
         //fillRemainingDiag();
+        Console.WriteLine("done diag");
+        // Fill the diagonal of SRN x SRN matrices
+        fillDiagonal();
+        // Fill remaining blocks
+        fillRemaining(0, SRN);
  
         // Remove Randomly K digits to make game
         removeKDigits();
     }
- 
+
     // Fill the diagonal SRN number of SRN x SRN matrices
     void fillDiagonal()
     {
@@ -80,13 +140,17 @@ public class Sudoku
         {
             for (int j=0; j<SRN; j++)
             {
-                do
+                (double ii, int jj) gridLocation = (i, j);
+                if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation))
                 {
-                    num = randomGenerator(N);
+                    do
+                    {
+                        num = randomGenerator(N);
+                    }
+                    while (!unUsedInBox(row, col, num));
+    
+                    mat[row+i,col+j] = num;
                 }
-                while (!unUsedInBox(row, col, num));
- 
-                mat[row+i,col+j] = num;
             }
         }
     }
@@ -103,11 +167,23 @@ public class Sudoku
     {
         return (unUsedInRow(i, num) &&
             unUsedInCol(j, num) &&
-            unUsedInDiagLeft(num) &&
-            unUsedInDiagRight(num) &&
             unUsedInBox(i-i%SRN, j-j%SRN, num));
     }
  
+    bool checkifsafediagleft(int num, int l)
+    {
+        return (unUsedInDiagLeft(num) &&
+        unUsedInCol(l, num) &&
+        unUsedInRow(l, num));
+    }
+
+    bool checkifsafediagright(int num, int l, int l2)
+    {
+        return (unUsedInDiagRight(num) &&
+        unUsedInCol(l2, num) &&
+        unUsedInRow(l, num));
+    }
+
     // check in the row for existence
     bool unUsedInRow(int i,int num)
     {
@@ -180,6 +256,43 @@ public class Sudoku
         }
     }
  */
+
+    bool fillDiag(int l)
+    {
+        if (l >= N-1)
+        {
+            return false;
+        }
+        else
+        {
+            l++;
+        }
+
+        Console.WriteLine("here");
+
+        foreach (int i in diagrandom)
+        {
+            if (checkifsafediagleft(i, l))
+            {
+                mat[l,l] = i;
+            }
+        }
+        foreach(int i in diagrandom2)
+        {
+            int findL = convertRight[l];
+            if (checkifsafediagright(i, l, findL))
+            {
+                int changeL = convertRight[i-1];
+                mat[l, changeL] = i;
+            }
+        }
+        if (fillDiag(l))
+            {
+                return true;
+            }
+            //mat[l,l] = 0;
+        return false;
+    }
     // A recursive function to fill remaining
     // matrix
     bool fillRemaining(int i, int j)
@@ -215,13 +328,18 @@ public class Sudoku
  
         for (int num = 1; num<=N; num++)
         {
-            if (CheckIfSafe(i, j, num))
+            (double ii, int jj) gridLocation2 = (i, j);
+            if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation2))
             {
-                mat[i,j] = num;
-                if (fillRemaining(i, j+1))
-                    return true;
-                mat[i,j] = 0;
+                if (CheckIfSafe(i, j, num))
+                {
+                    mat[i,j] = num;
+                    if (fillRemaining(i, j+1))
+                        return true;
+                    mat[i,j] = 0;
+                }
             }
+            //else {return false}
         }
         return false;
     }
