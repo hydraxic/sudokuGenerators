@@ -148,34 +148,40 @@ public class Sudoku
         //fillRemainingDiag();
         Console.WriteLine("done diag");
         // Fill the diagonal of SRN x SRN matrices
-        if (fillDiagonal() == 2)
+        fillDiagonal();
+        //{
+         //   fillValues();
+          //  return;
+           // Console.WriteLine("box recursion");
+        //}
+
+        for (int i = 0; i<N; i++)
         {
-            Console.WriteLine("box recursion");
-            fillValues();
-            //return;
+            for (int j = 0; j<N; j++)
+                Console.Write(mat[i,j] + " ");
+            Console.WriteLine();
         }
+
+        Console.WriteLine("done box");
         // Fill remaining blocks
         
-        if (fillRemaining(0, SRN) == 2)
-        {
-            Console.WriteLine("row and col recursion");
-            fillValues();
-            return;
-        }
+        fillRemaining(0, SRN);
+        //{
+         //   Console.WriteLine("row and col recursion");
+          //  fillValues();
+           // return;
+        //}
  
         // Remove Randomly K digits to make game
         removeKDigits();
     }
 
     // Fill the diagonal SRN number of SRN x SRN matrices
-    int fillDiagonal()
+    void fillDiagonal()
     {
- 
         for (int i = 0; i<N; i=i+SRN)
- 
             // for diagonal box, start coordinates->i==j
-            return fillBox(i, i);
-        return 0;
+            fillBox(i, i);
     }
  
     // Returns false if given 3 x 3 block contains num.
@@ -191,7 +197,7 @@ public class Sudoku
     }
  
     // Fill a 3 x 3 matrix.
-    int fillBox(int row,int col)
+    void fillBox(int row,int col)
     {
         int num;
         for (int i=0; i<SRN; i++)
@@ -201,15 +207,16 @@ public class Sudoku
                 (double, int) gridLocation = (col+j, row+i);
                 if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
                 {
-                    int counter = 0;
+                    //int counter = 0;
                     do
                     {
                         num = randomGenerator(N);
-                        counter++;
-                        if (counter >= 5000)
-                        {
-                            return 2;
-                        }
+                        //counter++;
+                        //Console.WriteLine(counter);
+                        //if (counter >= 20000)
+                        //{
+                         //   return 2;
+                        //}
                         //Console.WriteLine(counter);
                     }
                     while (!CheckIfSafe(row+i, col+j, num));
@@ -217,7 +224,7 @@ public class Sudoku
                 }
             }
         }
-        return 0;
+        //return 0;
     }
  
     // Random generator
@@ -354,13 +361,13 @@ public class Sudoku
     // A recursive function to fill remaining
     // matrix
     int counter2 = 0;
-    bool exit = false;
+    //bool exit = false;
     int fillRemaining(int i, int j)
     {
-        if (exit)
-        {
-            return 0;
-        }
+        //if (exit)
+        //{
+        //    return 0;
+        //}
         if (j>=N && i<N-1)
         {
             i = i + 1;
@@ -403,12 +410,13 @@ public class Sudoku
                     mat[i,j] = num;
                     if (fillRemaining(i, j+1) == 1)
                         return 1;
-                    exit = true;
-                    return 2;
+                    //exit = true;
+                    //return 2;
                 }
                 //else {return false}
             }
-            return 0;
+            //return 0;
+            mat[i, j] = 0;
         }
         else
         {
