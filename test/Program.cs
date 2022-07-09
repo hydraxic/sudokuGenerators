@@ -103,7 +103,13 @@ public class Sudoku
 
             for (int index = 0; index <= N-2; index++)
             {
+                List<int> reverseDiagrandom2 = diagrandom2.Reverse();
                 if (diagrandom[index] == diagrandom2[index])
+                {
+                    refresh = true;
+                    break;
+                }
+                else if (diagrandom[index] == reverseDiagrandom2[index])
                 {
                     refresh = true;
                     break;
