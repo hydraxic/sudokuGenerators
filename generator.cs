@@ -132,12 +132,7 @@ public class Sudoku
         // Fill the diagonal of SRN x SRN matrices
         fillDiagonal();
         // Fill remaining blocks
-        if (fillRemaining(0, SRN) == 2)
-        {
-            Console.WriteLine("large recursion");
-            fillValues();
-            return;
-        }
+        fillValues();
  
         // Remove Randomly K digits to make game
         removeKDigits();
@@ -324,7 +319,7 @@ public class Sudoku
     // A recursive function to fill remaining
     // matrix
     int counter2 = 0;
-    int fillRemaining(int i, int j)
+    bool fillRemaining(int i, int j)
     {
         if (j>=N && i<N-1)
         {
@@ -332,7 +327,7 @@ public class Sudoku
             j = 0;
         }
         if (i>=N && j>=N)
-            return 1;
+            return true;
  
         if (i < SRN)
         {
@@ -351,7 +346,7 @@ public class Sudoku
                 i = i + 1;
                 j = 0;
                 if (i>=N)
-                    return 1;
+                    return true;
             }
         }
  
@@ -366,22 +361,22 @@ public class Sudoku
                 if (CheckIfSafe(i, j, num))
                 {
                     mat[i,j] = num;
-                    if (fillRemaining(i, j+1) == 1)
-                        return 1;
-                    return 2;
+                    if (fillRemaining(i, j+1))
+                        return true;
+                    mat[i, j] = 0;
                 }
                 //else {return false}
             }
-            return 0;
+            return false;
         }
         else
         {
-            if (fillRemaining(i, j+1) == 1)
+            if (fillRemaining(i, j+1))
             {
-                return 1;
+                return true;
             }
         }
-        return 0;
+        return false;
     }
  
     // Remove the K no. of digits to

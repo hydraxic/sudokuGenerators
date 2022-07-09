@@ -83,6 +83,10 @@ public class Sudoku
     // Sudoku Generator
     public void fillValues()
     {
+        mat = new int[N,N];
+        diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
         int toRemove = randomGenerator(N);
         diagrandom.RemoveAt(toRemove-1);
         diagrandom2.RemoveAt(toRemove-1);
@@ -97,7 +101,7 @@ public class Sudoku
         {
             diagrandom2.Shuffle();
 
-            for (int index = 0; index < N-1; index++)
+            for (int index = 0; index <= N-2; index++)
             {
                 if (diagrandom[index] == diagrandom2[index])
                 {
@@ -111,7 +115,6 @@ public class Sudoku
             }
             if (refresh == false)
             {
-
                 break;
             }
         }
@@ -126,26 +129,46 @@ public class Sudoku
         int[] need = new int[] {-1, toRemove};
         //Console.WriteLine("[{0}]", string.Join(", ", derange()));
         fillDiag(need);
+
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+                Console.Write(mat[i,j] + " ");
+            Console.WriteLine();
+        }
+        Console.WriteLine();
         // Fill for diag
         //fillRemainingDiag();
         Console.WriteLine("done diag");
         // Fill the diagonal of SRN x SRN matrices
-        fillDiagonal();
+        if (fillDiagonal() == 2)
+        {
+            Console.WriteLine("box recursion");
+            fillValues();
+            //return;
+        }
         // Fill remaining blocks
-        fillValues();
+        
+        if (fillRemaining(0, SRN) == 2)
+        {
+            Console.WriteLine("row and col recursion");
+            fillValues();
+            return;
+        }
  
         // Remove Randomly K digits to make game
         removeKDigits();
     }
 
     // Fill the diagonal SRN number of SRN x SRN matrices
-    void fillDiagonal()
+    int fillDiagonal()
     {
  
         for (int i = 0; i<N; i=i+SRN)
  
             // for diagonal box, start coordinates->i==j
-            fillBox(i, i);
+            return fillBox(i, i);
+        return 0;
     }
  
     // Returns false if given 3 x 3 block contains num.
@@ -161,7 +184,7 @@ public class Sudoku
     }
  
     // Fill a 3 x 3 matrix.
-    void fillBox(int row,int col)
+    int fillBox(int row,int col)
     {
         int num;
         for (int i=0; i<SRN; i++)
@@ -176,13 +199,18 @@ public class Sudoku
                     {
                         num = randomGenerator(N);
                         counter++;
-                        Console.WriteLine(counter);
+                        if (counter >= 5000)
+                        {
+                            return 2;
+                        }
+                        //Console.WriteLine(counter);
                     }
                     while (!CheckIfSafe(row+i, col+j, num));
                     mat[row+i,col+j] = num;
                 }
             }
         }
+        return 0;
     }
  
     // Random generator
@@ -311,7 +339,7 @@ public class Sudoku
             //Console.WriteLine(i);
             int changeL = convertRight[l];
             Console.WriteLine(changeL);
-            mat[l, changeL] = i;
+            mat[changeL, l] = i;
             l++;
         }
         return false;
@@ -319,15 +347,20 @@ public class Sudoku
     // A recursive function to fill remaining
     // matrix
     int counter2 = 0;
-    bool fillRemaining(int i, int j)
+    bool exit = false;
+    int fillRemaining(int i, int j)
     {
+        if (exit)
+        {
+            return 0;
+        }
         if (j>=N && i<N-1)
         {
             i = i + 1;
             j = 0;
         }
         if (i>=N && j>=N)
-            return true;
+            return 1;
  
         if (i < SRN)
         {
@@ -346,7 +379,7 @@ public class Sudoku
                 i = i + 1;
                 j = 0;
                 if (i>=N)
-                    return true;
+                    return 1;
             }
         }
  
@@ -361,22 +394,23 @@ public class Sudoku
                 if (CheckIfSafe(i, j, num))
                 {
                     mat[i,j] = num;
-                    if (fillRemaining(i, j+1))
-                        return true;
-                    mat[i, j] = 0;
+                    if (fillRemaining(i, j+1) == 1)
+                        return 1;
+                    exit = true;
+                    return 2;
                 }
                 //else {return false}
             }
-            return false;
+            return 0;
         }
         else
         {
-            if (fillRemaining(i, j+1))
+            if (fillRemaining(i, j+1) == 1)
             {
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
  
     // Remove the K no. of digits to
