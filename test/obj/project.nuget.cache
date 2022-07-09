@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ctq69+C3dZUfoThWpCpulJqxnS3g8+D0tWu/8jPdG+WFkffHV3Eb+neQR8l8huGGmIdZmLYOaG8UpJPCNUbxmA==",
+  "dgSpecHash": "844mcRM9KmZPeMUavmIM9i1zJbcdU0AtZfNejq++Tuyj0Bw+cxofaFqwRlVr8NVnEHNos7B0ah3r2OltpSRzPA==",
   "success": true,
   "projectFilePath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\samue\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\samue\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\samue\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }
