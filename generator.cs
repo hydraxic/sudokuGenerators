@@ -3,27 +3,18 @@ using System.Collections.Generic;
 
 static class Extensions
 {
-    public static void Shuffle<T> (this Random rng, T[] array)
-    {
-        int n = array.Length;
-        while (n > 1) 
-        {
-            int k = rng.Next(n--);
-            T temp = array[n];
-            array[n] = array[k];
-            array[k] = temp;
-        }
-    }
-    public static T[] RemoveAt<T>(this T[] source, int index)
-    {
-        T[] dest = new T[source.Length - 1];
-        if( index > 0 )
-            Array.Copy(source, 0, dest, 0, index);
+    private static Random rng = new Random();  
 
-        if( index < source.Length - 1 )
-            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
-
-        return dest;
+    public static void Shuffle<T>(this IList<T> list)  
+    {  
+        int n = list.Count;  
+        while (n > 1) {  
+            n--;  
+            int k = rng.Next(n + 1);  
+            T value = list[k];  
+            list[k] = list[n];  
+            list[n] = value;  
+        }  
     }
 }
 
@@ -37,8 +28,8 @@ public class Sudoku
     // dictionary for converting 9-0, 8-1, 7-2, etc.
     Dictionary<int, int> convertRight = new Dictionary<int, int>();
  
-    public int[] diagrandom = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    public int[] diagrandom2 = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    public List<int> diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    public List<int> diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     public (int, int)[] doNotOverwriteGrids = new[] {
         (0, 0),
@@ -60,6 +51,10 @@ public class Sudoku
         (1, 7),
         (0, 8)
     };
+
+    static int num = 8;
+    static int [] buf = new int [num];
+    static bool [] used = new bool [num];
 
     // Constructor
     public Sudoku(int N, int K)
@@ -89,23 +84,60 @@ public class Sudoku
     public void fillValues()
     {
         int toRemove = randomGenerator(N);
-        diagrandom = diagrandom.RemoveAt(toRemove);
-        diagrandom2 = diagrandom2.RemoveAt(toRemove);
+        diagrandom.RemoveAt(toRemove-1);
+        diagrandom2.RemoveAt(toRemove-1);
+        Console.WriteLine(toRemove);
         Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
         Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
-        var rng = new Random();
-        rng.Shuffle(diagrandom);
-        rng.Shuffle(diagrandom);
-        rng.Shuffle(diagrandom2);
-        rng.Shuffle(diagrandom2);
-        fillDiag(-1);
+        //Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        //Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+        diagrandom.Shuffle();
+        bool refresh = true;
+        while (refresh == true)
+        {
+            diagrandom2.Shuffle();
+
+            for (int index = 0; index < N-1; index++)
+            {
+                if (diagrandom[index] == diagrandom2[index])
+                {
+                    refresh = true;
+                    break;
+                }
+                else
+                {
+                    refresh = false;
+                }
+            }
+            if (refresh == false)
+            {
+
+                break;
+            }
+        }
+        
+        diagrandom.Insert(4, toRemove);
+        diagrandom2.Insert(4, toRemove);
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+
+
+
+        int[] need = new int[] {-1, toRemove};
+        //Console.WriteLine("[{0}]", string.Join(", ", derange()));
+        fillDiag(need);
         // Fill for diag
         //fillRemainingDiag();
         Console.WriteLine("done diag");
         // Fill the diagonal of SRN x SRN matrices
         fillDiagonal();
         // Fill remaining blocks
-        fillRemaining(0, SRN);
+        if (fillRemaining(0, SRN) == 2)
+        {
+            Console.WriteLine("large recursion");
+            fillValues();
+            return;
+        }
  
         // Remove Randomly K digits to make game
         removeKDigits();
@@ -126,9 +158,10 @@ public class Sudoku
     {
         for (int i = 0; i<SRN; i++)
             for (int j = 0; j<SRN; j++)
+            {
                 if (mat[rowStart+i,colStart+j]==num)
                     return false;
- 
+            }
         return true;
     }
  
@@ -140,15 +173,17 @@ public class Sudoku
         {
             for (int j=0; j<SRN; j++)
             {
-                (double ii, int jj) gridLocation = (i, j);
-                if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation))
+                (double, int) gridLocation = (col+j, row+i);
+                if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
                 {
+                    int counter = 0;
                     do
                     {
                         num = randomGenerator(N);
+                        counter++;
+                        Console.WriteLine(counter);
                     }
-                    while (!unUsedInBox(row, col, num));
-    
+                    while (!CheckIfSafe(row+i, col+j, num));
                     mat[row+i,col+j] = num;
                 }
             }
@@ -257,45 +292,39 @@ public class Sudoku
     }
  */
 
-    bool fillDiag(int l)
+    bool fillDiag(int[] listofneeded)
     {
-        if (l >= N-1)
-        {
-            return false;
-        }
-        else
-        {
-            l++;
-        }
+        int l = listofneeded[0];
+        int toRemove = listofneeded[1];
+
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+
+        l++;
 
         Console.WriteLine("here");
-
+        Console.WriteLine(l);
         foreach (int i in diagrandom)
         {
-            if (checkifsafediagleft(i, l))
-            {
-                mat[l,l] = i;
-            }
+            //Console.WriteLine(i);
+            mat[l,l] = i;
+            l++;
         }
-        foreach(int i in diagrandom2)
+        l = 0;
+        foreach (int i in diagrandom2)
         {
-            int findL = convertRight[l];
-            if (checkifsafediagright(i, l, findL))
-            {
-                int changeL = convertRight[i-1];
-                mat[l, changeL] = i;
-            }
+            //Console.WriteLine(i);
+            int changeL = convertRight[l];
+            Console.WriteLine(changeL);
+            mat[l, changeL] = i;
+            l++;
         }
-        if (fillDiag(l))
-            {
-                return true;
-            }
-            //mat[l,l] = 0;
         return false;
     }
     // A recursive function to fill remaining
     // matrix
-    bool fillRemaining(int i, int j)
+    int counter2 = 0;
+    int fillRemaining(int i, int j)
     {
         if (j>=N && i<N-1)
         {
@@ -303,7 +332,7 @@ public class Sudoku
             j = 0;
         }
         if (i>=N && j>=N)
-            return true;
+            return 1;
  
         if (i < SRN)
         {
@@ -322,26 +351,37 @@ public class Sudoku
                 i = i + 1;
                 j = 0;
                 if (i>=N)
-                    return true;
+                    return 1;
             }
         }
  
-        for (int num = 1; num<=N; num++)
+        counter2++;
+        //Console.WriteLine(counter2);
+
+        (double, int) gridLocation2 = (i, j);
+        if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
         {
-            (double ii, int jj) gridLocation2 = (i, j);
-            if (!Array.Exists(doNotOverwriteGrids, element => element == gridLocation2))
+            for (int num = 1; num<=N; num++)
             {
                 if (CheckIfSafe(i, j, num))
                 {
                     mat[i,j] = num;
-                    if (fillRemaining(i, j+1))
-                        return true;
-                    mat[i,j] = 0;
+                    if (fillRemaining(i, j+1) == 1)
+                        return 1;
+                    return 2;
                 }
+                //else {return false}
             }
-            //else {return false}
+            return 0;
         }
-        return false;
+        else
+        {
+            if (fillRemaining(i, j+1) == 1)
+            {
+                return 1;
+            }
+        }
+        return 0;
     }
  
     // Remove the K no. of digits to
