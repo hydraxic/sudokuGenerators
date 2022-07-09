@@ -358,11 +358,6 @@ public class Sudoku
         counter2++;
         //Console.WriteLine(counter2);
 
-        if (counter2 >= 100000)
-        {
-            return 2;
-        }
-
         (double, int) gridLocation2 = (i, j);
         if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
         {
