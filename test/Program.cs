@@ -97,13 +97,14 @@ public class Sudoku
         //Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
         diagrandom.Shuffle();
         bool refresh = true;
+        List<int> reverseDiagrandom2;
         while (refresh == true)
         {
             diagrandom2.Shuffle();
 
             for (int index = 0; index <= N-2; index++)
             {
-                List<int> reverseDiagrandom2 = diagrandom2.Reverse();
+                reverseDiagrandom2 = diagrandom2.Reverse();
                 if (diagrandom[index] == diagrandom2[index])
                 {
                     refresh = true;
