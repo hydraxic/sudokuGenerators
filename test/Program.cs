@@ -31,7 +31,7 @@ public class Sudoku
     public List<int> diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
     public List<int> diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    public (int, int)[] doNotOverwriteGrids = new[] {
+    /*public (int, int)[] doNotOverwriteGrids = new[] {
         (0, 0),
         (1, 1),
         (2, 2),
@@ -50,7 +50,7 @@ public class Sudoku
         (2, 6),
         (1, 7),
         (0, 8)
-    };
+    };*/
 
     static int num = 8;
     static int [] buf = new int [num];
@@ -204,8 +204,9 @@ public class Sudoku
         {
             for (int j=0; j<SRN; j++)
             {
-                (double, int) gridLocation = (col+j, row+i);
-                if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
+                //(double, int) gridLocation = (col+j, row+i);
+                //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
+                if (mat[row+i, col+j] == 0)
                 {
                     //int counter = 0;
                     do
@@ -400,8 +401,9 @@ public class Sudoku
         counter2++;
         //Console.WriteLine(counter2);
 
-        (double, int) gridLocation2 = (i, j);
-        if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        //(double, int) gridLocation2 = (i, j);
+        //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        if (mat[i, j] == 0)
         {
             for (int num = 1; num<=N; num++)
             {
