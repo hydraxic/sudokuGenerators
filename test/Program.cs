@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 static class Extensions
 {
@@ -21,6 +22,7 @@ static class Extensions
 public class Sudoku
 {
     int[,] mat;
+    int[,] sMat;
     int N; // number of columns/rows.
     int SRN; // square root of N
     int K; // No. Of missing digits
@@ -78,12 +80,14 @@ public class Sudoku
         SRN = (int)SRNd;
  
         mat = new int[N,N];
+        sMat = new int[N, N];
     }
  
     // Sudoku Generator
-    public void fillValues()
+    public bool fillValues()
     {
         mat = new int[N,N];
+        sMat = new int[N, N];
         diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
         diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
@@ -171,9 +175,30 @@ public class Sudoku
           //  fillValues();
            // return;
         //}
- 
+        
+        
+
         // Remove Randomly K digits to make game
-        removeKDigits();
+
+        
+
+        if (CheckIfComplete() == true)
+        {
+            sMat = mat;
+            for (int i = 0; i<N; i++)
+            {
+                for (int j = 0; j<N; j++)
+                    Console.Write(mat[i,j] + " ");
+                Console.WriteLine();
+            }
+            removeKDigits();
+            return true;
+        }
+        else
+        {return false;}
+
+
+        
     }
 
     // Fill the diagonal SRN number of SRN x SRN matrices
@@ -440,8 +465,9 @@ public class Sudoku
     // complete game
     public void removeKDigits()
     {
-        int count = K;
-        while (count != 0)
+        Console.WriteLine("here1");
+        int countk = K;
+        while (countk != 0)
         {
             int cellId = randomGenerator(N*N)-1;
  
@@ -455,20 +481,66 @@ public class Sudoku
             // System.out.println(i+" "+j);
             if (mat[i,j] != 0)
             {
-                count--;
+                countk--;
                 mat[i,j] = 0;
             }
+            
         }
+        Console.WriteLine("here");
     }
  
-    // Print sudoku
-    public void printSudoku()
+    public bool CheckIfComplete()
     {
         for (int i = 0; i<N; i++)
         {
             for (int j = 0; j<N; j++)
             {
-                if (mat[i, j] == 0) {goto Exit;}
+                if (mat[i, j] == 0) {return false;}
+            }
+            //Console.WriteLine();
+        }
+        return true;
+    }
+
+    // Print sudoku
+    public bool printSudoku()
+    {
+        /*for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+                Console.Write(mat[i,j] + " ");
+            Console.WriteLine();
+        }*/
+
+        //int countExit = 0;
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+            {
+                if (sMat[i, j] == 0) {goto Exit;}
+                else {Console.Write(sMat[i,j] + " ");}
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+        return true;
+    Exit:
+        Console.WriteLine("unsolvable");
+        return false;
+    }
+
+    public void unsolvedPrintSudoku()
+    {
+        int countExit = 0;
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+            {
+                if (mat[i, j] == 0)
+                {
+                    countExit++;
+                    if (countExit > K) {goto Exit;}
+                }
                 else {Console.Write(mat[i,j] + " ");}
             }
             Console.WriteLine();
@@ -478,15 +550,28 @@ public class Sudoku
         Console.WriteLine("unsolvable");
     }
 
+    public void unsolvedPrintSudoku2()
+    {
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+                Console.Write(mat[i,j] + " ");
+            Console.WriteLine();
+        }
+    }
+
     // Driver code
     public static void Main(string[] args)
     {
-        for (int gen = 0; gen < 10; gen++)
+        for (int gen = 0; gen < 100; gen++)
         {
-            int N = 9, K = 0;
+            int N = 9, K = 40;
             Sudoku sudoku = new Sudoku(N, K);
-            sudoku.fillValues();
-            sudoku.printSudoku();
+            if (sudoku.fillValues() == true)
+            {
+                //sudoku.printSudoku();
+                sudoku.unsolvedPrintSudoku2();
+            }
         }
     }
 }

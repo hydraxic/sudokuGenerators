@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 static class Extensions
 {
@@ -21,6 +22,7 @@ static class Extensions
 public class Sudoku
 {
     int[,] mat;
+    int[,] sMat;
     int N; // number of columns/rows.
     int SRN; // square root of N
     int K; // No. Of missing digits
@@ -31,7 +33,7 @@ public class Sudoku
     public List<int> diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
     public List<int> diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    public (int, int)[] doNotOverwriteGrids = new[] {
+    /*public (int, int)[] doNotOverwriteGrids = new[] {
         (0, 0),
         (1, 1),
         (2, 2),
@@ -50,7 +52,7 @@ public class Sudoku
         (2, 6),
         (1, 7),
         (0, 8)
-    };
+    };*/
 
     static int num = 8;
     static int [] buf = new int [num];
@@ -78,17 +80,23 @@ public class Sudoku
         SRN = (int)SRNd;
  
         mat = new int[N,N];
+        sMat = new int[N, N];
     }
  
     // Sudoku Generator
-    public void fillValues()
+    public bool fillValues()
     {
+        mat = new int[N,N];
+        sMat = new int[N, N];
+        diagrandom = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        diagrandom2 = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
         int toRemove = randomGenerator(N);
         diagrandom.RemoveAt(toRemove-1);
         diagrandom2.RemoveAt(toRemove-1);
-        Console.WriteLine(toRemove);
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+        //  Console.WriteLine(toRemove);
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
         //Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
         //Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
         diagrandom.Shuffle();
@@ -97,9 +105,16 @@ public class Sudoku
         {
             diagrandom2.Shuffle();
 
-            for (int index = 0; index < N-1; index++)
+            for (int index = 0; index <= N-2; index++)
             {
+                List<int> reverseDiagrandom2 = new List<int>(diagrandom2);
+                reverseDiagrandom2.Reverse();
                 if (diagrandom[index] == diagrandom2[index])
+                {
+                    refresh = true;
+                    break;
+                }
+                else if (diagrandom[index] == reverseDiagrandom2[index])
                 {
                     refresh = true;
                     break;
@@ -111,39 +126,85 @@ public class Sudoku
             }
             if (refresh == false)
             {
-
                 break;
             }
         }
         
         diagrandom.Insert(4, toRemove);
         diagrandom2.Insert(4, toRemove);
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
 
 
 
         int[] need = new int[] {-1, toRemove};
         //Console.WriteLine("[{0}]", string.Join(", ", derange()));
         fillDiag(need);
+
+        //  for (int i = 0; i<N; i++)
+        //  {
+            //  for (int j = 0; j<N; j++)
+                //  Console.Write(mat[i,j] + " ");
+            //  Console.WriteLine();
+        //  }
+        //  Console.WriteLine();
         // Fill for diag
         //fillRemainingDiag();
-        Console.WriteLine("done diag");
+        //  Console.WriteLine("done diag");
         // Fill the diagonal of SRN x SRN matrices
         fillDiagonal();
+        //{
+         //   fillValues();
+          //  return;
+           // Console.WriteLine("box recursion");
+        //}
+
+        //  for (int i = 0; i<N; i++)
+        //  {
+            //  for (int j = 0; j<N; j++)
+                //  Console.Write(mat[i,j] + " ");
+            //  Console.WriteLine();
+        //  }
+
+        //  Console.WriteLine("done box");
         // Fill remaining blocks
-        fillValues();
- 
+        
+        fillRemaining(0, SRN, false);
+        //{
+         //   Console.WriteLine("row and col recursion");
+          //  fillValues();
+           // return;
+        //}
+        
+        
+
         // Remove Randomly K digits to make game
-        removeKDigits();
+
+        
+
+        if (CheckIfComplete() == true)
+        {
+            sMat = mat;
+            for (int i = 0; i<N; i++)
+            {
+                for (int j = 0; j<N; j++)
+                    Console.Write(mat[i,j] + " ");
+                Console.WriteLine();
+            }
+            removeKDigits();
+            return true;
+        }
+        else
+        {return false;}
+
+
+        
     }
 
     // Fill the diagonal SRN number of SRN x SRN matrices
     void fillDiagonal()
     {
- 
         for (int i = 0; i<N; i=i+SRN)
- 
             // for diagonal box, start coordinates->i==j
             fillBox(i, i);
     }
@@ -164,25 +225,33 @@ public class Sudoku
     void fillBox(int row,int col)
     {
         int num;
+        int counter = 0;
         for (int i=0; i<SRN; i++)
         {
             for (int j=0; j<SRN; j++)
             {
-                (double, int) gridLocation = (col+j, row+i);
-                if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
+                //(double, int) gridLocation = (col+j, row+i);
+                //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation)))
+                if (mat[row+i, col+j] == 0)
                 {
-                    int counter = 0;
                     do
                     {
                         num = randomGenerator(N);
                         counter++;
-                        Console.WriteLine(counter);
+                        //Console.WriteLine(counter);
+                        if (counter >= 7500)
+                        {
+                            //  Console.WriteLine("is over 7500 box");
+                            return;
+                        }
+                        //Console.WriteLine(counter);
                     }
                     while (!CheckIfSafe(row+i, col+j, num));
                     mat[row+i,col+j] = num;
                 }
             }
         }
+        //return 0;
     }
  
     // Random generator
@@ -292,13 +361,13 @@ public class Sudoku
         int l = listofneeded[0];
         int toRemove = listofneeded[1];
 
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
-        Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom));
+        //  Console.WriteLine("[{0}]", string.Join(", ", diagrandom2));
 
         l++;
 
-        Console.WriteLine("here");
-        Console.WriteLine(l);
+        //  Console.WriteLine("here");
+        //  Console.WriteLine(l);
         foreach (int i in diagrandom)
         {
             //Console.WriteLine(i);
@@ -310,8 +379,8 @@ public class Sudoku
         {
             //Console.WriteLine(i);
             int changeL = convertRight[l];
-            Console.WriteLine(changeL);
-            mat[l, changeL] = i;
+            //  Console.WriteLine(changeL);
+            mat[changeL, l] = i;
             l++;
         }
         return false;
@@ -319,15 +388,20 @@ public class Sudoku
     // A recursive function to fill remaining
     // matrix
     int counter2 = 0;
-    bool fillRemaining(int i, int j)
+    //bool exit = false;
+    int fillRemaining(int i, int j, bool exit)
     {
+        /*if (exit)
+        {
+            return 0;
+        }*/
         if (j>=N && i<N-1)
         {
             i = i + 1;
             j = 0;
         }
         if (i>=N && j>=N)
-            return true;
+            return 1;
  
         if (i < SRN)
         {
@@ -346,45 +420,54 @@ public class Sudoku
                 i = i + 1;
                 j = 0;
                 if (i>=N)
-                    return true;
+                    return 1;
             }
         }
  
         counter2++;
-        //Console.WriteLine(counter2);
+        //  Console.WriteLine(counter2);
+        if (counter2 >= 7500)
+        {
+            //  Console.WriteLine("is over 7500");
+            return 0;
+        }
 
-        (double, int) gridLocation2 = (i, j);
-        if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        //(double, int) gridLocation2 = (i, j);
+        //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        if (mat[i, j] == 0)
         {
             for (int num = 1; num<=N; num++)
             {
                 if (CheckIfSafe(i, j, num))
                 {
                     mat[i,j] = num;
-                    if (fillRemaining(i, j+1))
-                        return true;
+                    if (fillRemaining(i, j+1, false) == 1)
+                        return 1;
                     mat[i, j] = 0;
+                    //exit = true;
+                    //return 2;
                 }
                 //else {return false}
             }
-            return false;
+            //return 0;
         }
         else
         {
-            if (fillRemaining(i, j+1))
+            if (fillRemaining(i, j+1, false) == 1)
             {
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
  
     // Remove the K no. of digits to
     // complete game
     public void removeKDigits()
     {
-        int count = K;
-        while (count != 0)
+        Console.WriteLine("here1");
+        int countk = K;
+        while (countk != 0)
         {
             int cellId = randomGenerator(N*N)-1;
  
@@ -398,14 +481,76 @@ public class Sudoku
             // System.out.println(i+" "+j);
             if (mat[i,j] != 0)
             {
-                count--;
+                countk--;
                 mat[i,j] = 0;
             }
+            
         }
+        Console.WriteLine("here");
     }
  
+    public bool CheckIfComplete()
+    {
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+            {
+                if (mat[i, j] == 0) {return false;}
+            }
+            //Console.WriteLine();
+        }
+        return true;
+    }
+
     // Print sudoku
-    public void printSudoku()
+    public bool printSudoku()
+    {
+        /*for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+                Console.Write(mat[i,j] + " ");
+            Console.WriteLine();
+        }*/
+
+        //int countExit = 0;
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+            {
+                if (sMat[i, j] == 0) {goto Exit;}
+                else {Console.Write(sMat[i,j] + " ");}
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+        return true;
+    Exit:
+        Console.WriteLine("unsolvable");
+        return false;
+    }
+
+    public void unsolvedPrintSudoku()
+    {
+        int countExit = 0;
+        for (int i = 0; i<N; i++)
+        {
+            for (int j = 0; j<N; j++)
+            {
+                if (mat[i, j] == 0)
+                {
+                    countExit++;
+                    if (countExit > K) {goto Exit;}
+                }
+                else {Console.Write(mat[i,j] + " ");}
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    Exit:
+        Console.WriteLine("unsolvable");
+    }
+
+    public void unsolvedPrintSudoku2()
     {
         for (int i = 0; i<N; i++)
         {
@@ -413,15 +558,20 @@ public class Sudoku
                 Console.Write(mat[i,j] + " ");
             Console.WriteLine();
         }
-        Console.WriteLine();
     }
- 
+
     // Driver code
     public static void Main(string[] args)
     {
-        int N = 9, K = 0;
-        Sudoku sudoku = new Sudoku(N, K);
-        sudoku.fillValues();
-        sudoku.printSudoku();
+        for (int gen = 0; gen < 100; gen++)
+        {
+            int N = 9, K = 40;
+            Sudoku sudoku = new Sudoku(N, K);
+            if (sudoku.fillValues() == true)
+            {
+                //sudoku.printSudoku();
+                sudoku.unsolvedPrintSudoku2();
+            }
+        }
     }
 }
