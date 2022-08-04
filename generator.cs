@@ -84,7 +84,7 @@ public class Sudoku
     }
  
     // Sudoku Generator
-    public bool fillValues()
+    public bool fillValues(int actualIter)
     {
         mat = new int[N,N];
         sMat = new int[N, N];
@@ -180,18 +180,26 @@ public class Sudoku
 
         // Remove Randomly K digits to make game
 
-        
+        sMat = mat;
 
         if (CheckIfComplete() == true)
         {
-            sMat = mat;
-            for (int i = 0; i<N; i++)
+            
+            string path = @"D:\OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+            using (StreamWriter sw = File.CreateText(path))
             {
-                for (int j = 0; j<N; j++)
-                    Console.Write(mat[i,j] + " ");
-                Console.WriteLine();
+                for (int i = 0; i<N; i++)
+                {
+                    for (int j = 0; j<N; j++)
+                    {
+                        sw.Write(sMat[i,j] + " ");
+                    }
+                    sw.Write("\n");
+                }
+            sw.Flush();
+            sw.Close();
             }
-            removeKDigits();
+            RemoveKDigitsV2();
             return true;
         }
         else
@@ -489,6 +497,17 @@ public class Sudoku
         Console.WriteLine("here");
     }
  
+    public void RemoveKDigitsV2()
+    {
+        int countK = K;
+        while (countK != 0)
+        {
+            Random r = new Random(); 
+            mat[r.Next(mat.GetLength(0)), r.Next(mat.GetLength(1))] = 0;
+            countK--;
+        }
+    }
+
     public bool CheckIfComplete()
     {
         for (int i = 0; i<N; i++)
@@ -503,7 +522,7 @@ public class Sudoku
     }
 
     // Print sudoku
-    public bool printSudoku()
+    public bool printSudoku(int actualIter)
     {
         /*for (int i = 0; i<N; i++)
         {
@@ -513,17 +532,25 @@ public class Sudoku
         }*/
 
         //int countExit = 0;
-        for (int i = 0; i<N; i++)
+        Console.WriteLine(actualIter);
+        string path = @"D:\OUTPUTSUDOKU\" + actualIter.ToString() + ".txt";
+        using (StreamWriter sw = File.CreateText(path))
         {
-            for (int j = 0; j<N; j++)
+             for (int i = 0; i<N; i++)
             {
-                if (sMat[i, j] == 0) {goto Exit;}
-                else {Console.Write(sMat[i,j] + " ");}
+                for (int j = 0; j<N; j++)
+                {
+                    if (sMat[i, j] == 0) {goto Exit;}
+                    else {sw.Write(sMat[i,j] + " ");}
+                }
+                sw.Write("\n");
             }
-            Console.WriteLine();
+            
+            sw.Flush();
+            sw.Close();
+            //sw.WriteLine();
+            return true;   
         }
-        Console.WriteLine();
-        return true;
     Exit:
         Console.WriteLine("unsolvable");
         return false;
@@ -550,27 +577,37 @@ public class Sudoku
         Console.WriteLine("unsolvable");
     }
 
-    public void unsolvedPrintSudoku2()
+    public void unsolvedPrintSudoku2(int actualIter)
     {
-        for (int i = 0; i<N; i++)
-        {
-            for (int j = 0; j<N; j++)
-                Console.Write(mat[i,j] + " ");
-            Console.WriteLine();
-        }
+        string path = @"D:\OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+            using (StreamWriter sw = File.CreateText(path))
+            {
+                for (int i = 0; i<N; i++)
+                {
+                    for (int j = 0; j<N; j++)
+                    {
+                        sw.Write(mat[i,j] + " ");
+                    }
+                    sw.Write("\n");
+                }
+            sw.Flush();
+            sw.Close();
+            }
     }
 
     // Driver code
     public static void Main(string[] args)
     {
-        for (int gen = 0; gen < 100; gen++)
+        int actualIter = 1;
+        for (int gen = 0; gen < 300; gen++)
         {
             int N = 9, K = 40;
             Sudoku sudoku = new Sudoku(N, K);
-            if (sudoku.fillValues() == true)
+            if (sudoku.fillValues(actualIter) == true)
             {
-                //sudoku.printSudoku();
-                sudoku.unsolvedPrintSudoku2();
+                actualIter++;
+                //sudoku.printSudoku(actualIter);
+                sudoku.unsolvedPrintSudoku2(actualIter-1);
             }
         }
     }
