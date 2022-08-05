@@ -192,9 +192,19 @@ public class Sudoku
                 {
                     for (int j = 0; j<N; j++)
                     {
-                        sw.Write(sMat[i,j] + " ");
+                        if (j == N-1)
+                        {
+                            sw.Write(sMat[i, j]);
+                        }
+                        else
+                        {
+                            sw.Write(sMat[i,j] + " ");
+                        }
                     }
-                    sw.Write("\n");
+                    if (i != N-1)
+                    {
+                        sw.Write("\n");
+                    }
                 }
             sw.Flush();
             sw.Close();
@@ -580,19 +590,29 @@ public class Sudoku
     public void unsolvedPrintSudoku2(int actualIter)
     {
         string path = @"D:\OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
-            using (StreamWriter sw = File.CreateText(path))
+        using (StreamWriter sw = File.CreateText(path))
+        {
+            for (int i = 0; i<N; i++)
             {
-                for (int i = 0; i<N; i++)
+                for (int j = 0; j<N; j++)
                 {
-                    for (int j = 0; j<N; j++)
+                    if (j == N-1)
+                    {
+                        sw.Write(mat[i, j]);
+                    }
+                    else
                     {
                         sw.Write(mat[i,j] + " ");
                     }
+                }
+                if (i != N-1)
+                {
                     sw.Write("\n");
                 }
-            sw.Flush();
-            sw.Close();
             }
+        sw.Flush();
+        sw.Close();
+        }
     }
 
     // Driver code
