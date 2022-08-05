@@ -619,7 +619,7 @@ public class Sudoku
     public static void Main(string[] args)
     {
         int actualIter = 1;
-        for (int gen = 0; gen < 300; gen++)
+        for (int gen = 0; gen < 10000; gen++)
         {
             int N = 9, K = 40;
             Sudoku sudoku = new Sudoku(N, K);
