@@ -185,7 +185,7 @@ public class Sudoku
         if (CheckIfComplete() == true)
         {
             
-            string path = @"D:\OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+            string path = @"Documents\OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
             using (StreamWriter sw = File.CreateText(path))
             {
                 for (int i = 0; i<N; i++)
@@ -543,7 +543,7 @@ public class Sudoku
 
         //int countExit = 0;
         Console.WriteLine(actualIter);
-        string path = @"D:\OUTPUTSUDOKU\" + actualIter.ToString() + ".txt";
+        string path = @"Documents\OUTPUTSUDOKU\" + actualIter.ToString() + ".txt";
         using (StreamWriter sw = File.CreateText(path))
         {
              for (int i = 0; i<N; i++)
@@ -589,7 +589,7 @@ public class Sudoku
 
     public void unsolvedPrintSudoku2(int actualIter)
     {
-        string path = @"D:\OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+        string path = @"Documents\OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)

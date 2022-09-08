@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {}
+    "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj": {}
   },
   "projects": {
-    "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj": {
+    "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
         "projectName": "test",
-        "projectPath": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectPath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
         "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-        "outputPath": "D:\\Files\\repos\\diagonalSudokuGenerator\\test\\obj\\",
+        "outputPath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -49,18 +47,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[5.0.17, 5.0.17]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.409\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
