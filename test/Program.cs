@@ -22,7 +22,7 @@ public class Sudoku
 		SRN = (int)SRNd;
 
 		mat = new int[N,N];
-        EOMatrix = new (int, int)[EON]
+        EOMatrix = new (int, int)[EON];
 	}
 
 	// Sudoku Generator
