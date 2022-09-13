@@ -4,25 +4,22 @@ using System;
 public class Sudoku
 {
 	int[,] mat;
-    (int, int)[] EOMatrix;
 	int N; // number of columns/rows.
 	int SRN; // square root of N
 	int K; // No. Of missing digits
-    int EON;
+	int EO;
 
 	// Constructor
-	public Sudoku(int N, int K, int EON)
+	public Sudoku(int N, int K)
 	{
 		this.N = N;
 		this.K = K;
-        this.EON = EON;
 
 		// Compute square root of N
 		double SRNd = Math.Sqrt(N);
 		SRN = (int)SRNd;
 
 		mat = new int[N,N];
-        EOMatrix = new (int, int)[EON];
 	}
 
 	// Sudoku Generator
@@ -184,6 +181,18 @@ public class Sudoku
 		}
 	}
 
+	public void chooseEvenOdd()
+	{
+
+		(int, int)[] evenArray = new (int, int)[EO];
+		(int, int)[] oddArray = new (int, int)[EO];
+
+		for (int i = 0; i < EO; i++)
+		{
+
+		}
+	}
+
 	// Print sudoku
 	public void printSudoku()
 	{
@@ -199,7 +208,7 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
-		int N = 9, K = 20;
+		int N = 9, K = 20, EO = 10;
 		Sudoku sudoku = new Sudoku(N, K);
 		sudoku.fillValues();
 		sudoku.printSudoku();
