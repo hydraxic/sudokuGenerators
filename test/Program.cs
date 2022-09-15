@@ -10,10 +10,11 @@ public class Sudoku
 	int EO;
 
 	// Constructor
-	public Sudoku(int N, int K)
+	public Sudoku(int N, int K, int EO)
 	{
 		this.N = N;
 		this.K = K;
+		this.EO = EO;
 
 		// Compute square root of N
 		double SRNd = Math.Sqrt(N);
@@ -187,10 +188,34 @@ public class Sudoku
 		(int, int)[] evenArray = new (int, int)[EO];
 		(int, int)[] oddArray = new (int, int)[EO];
 
-		for (int i = 0; i < EO; i++)
-		{
+		Random rnd = new Random();
 
-		}
+		int count = 0;
+
+		do
+		{
+			int randomI = rnd.Next(0, 10);
+			int randomJ = rnd.Next(0, 10);
+
+			if (mat[randomI, randomJ] % 2 == 0)
+			{
+				if (evenArray.Length < EO)
+				{
+					Console.WriteLine((randomI, randomJ));
+					//evenArray[count] = (randomI, randomJ);
+				}
+			}
+			else
+			{
+				if (oddArray.Length < EO)
+				{
+					Console.WriteLine((randomI, randomJ));
+					//oddArray[count] = (randomI, randomJ);
+				}
+			}
+
+			count++;
+		} while (evenArray.Count(s => s != null) < 10 && oddArray.Count(s => s != null));
 	}
 
 	// Print sudoku
@@ -208,9 +233,10 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
-		int N = 9, K = 20, EO = 10;
-		Sudoku sudoku = new Sudoku(N, K);
+		int N = 9, K = 0, EO = 10;
+		Sudoku sudoku = new Sudoku(N, K, EO);
 		sudoku.fillValues();
+		sudoku.chooseEvenOdd();
 		sudoku.printSudoku();
 	}
 }
