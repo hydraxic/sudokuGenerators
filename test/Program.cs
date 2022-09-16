@@ -1,5 +1,6 @@
 ﻿/* C# program for Sudoku generator */
 using System;
+using System.Linq;
 
 public class Sudoku
 {
@@ -190,32 +191,58 @@ public class Sudoku
 
 		Random rnd = new Random();
 
+		List<(int, int)> randomVals = new List<(int, int)>();
+
+		for (int num = 0; num < 50; num++)
+		{
+			(int, int) randomTuple = (rnd.Next(0, 9), rnd.Next(0, 9));
+
+			if (!randomVals.Contains(randomTuple))
+			{
+				randomVals.Add(randomTuple);
+			}
+		}
+
+		foreach ((int, int) val in randomVals)
+		{
+			Console.WriteLine(val);
+		}
+		
 		int count = 0;
 
 		do
 		{
-			int randomI = rnd.Next(0, 10);
-			int randomJ = rnd.Next(0, 10);
+			//Console.WriteLine(count);
+			//Console.WriteLine(evenArray.Count(s => s != (0, 0)));
+
+			int randomI = rnd.Next(0, 9);
+			int randomJ = rnd.Next(0, 9);
 
 			if (mat[randomI, randomJ] % 2 == 0)
 			{
-				if (evenArray.Length < EO)
+				if (evenArray.Count(s => s != (0, 0)) < EO)
 				{
-					Console.WriteLine((randomI, randomJ));
-					//evenArray[count] = (randomI, randomJ);
+					//Console.WriteLine((randomI, randomJ));
+					evenArray[Array.FindIndex(evenArray, i => i == (0, 0))] = (randomI, randomJ);
 				}
 			}
 			else
 			{
-				if (oddArray.Length < EO)
+				if (oddArray.Count(s => s != (0, 0)) < EO)
 				{
-					Console.WriteLine((randomI, randomJ));
-					//oddArray[count] = (randomI, randomJ);
+					//Console.WriteLine((randomI, randomJ));
+					oddArray[Array.FindIndex(oddArray, i => i == (0, 0))] = (randomI, randomJ);
 				}
 			}
 
 			count++;
-		} while (evenArray.Count(s => s != null) < 10 && oddArray.Count(s => s != null));
+		} while (evenArray.Count(s => s != (0, 0)) < EO && oddArray.Count(s => s != (0, 0)) < EO);
+	
+		foreach ((int, int) tup in evenArray)
+		{
+			Console.WriteLine(tup);
+		}
+
 	}
 
 	// Print sudoku
