@@ -1,5 +1,9 @@
 /* C# program for Sudoku generator */
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Text.RegularExpressions;
 
 public class Sudoku
 {
@@ -7,12 +11,14 @@ public class Sudoku
 	int N; // number of columns/rows.
 	int SRN; // square root of N
 	int K; // No. Of missing digits
+	int EO;
 
 	// Constructor
-	public Sudoku(int N, int K)
+	public Sudoku(int N, int K, int EO)
 	{
 		this.N = N;
 		this.K = K;
+		this.EO = EO;
 
 		// Compute square root of N
 		double SRNd = Math.Sqrt(N);
@@ -22,13 +28,39 @@ public class Sudoku
 	}
 
 	// Sudoku Generator
-	public void fillValues()
+	public void fillValues(int actualIter)
 	{
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
 
 		// Fill remaining blocks
 		fillRemaining(0, SRN);
+
+
+		string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+		using (StreamWriter sw = File.CreateText(path))
+		{
+			for (int i = 0; i<N; i++)
+			{
+				for (int j = 0; j<N; j++)
+				{
+					if (j == N-1)
+					{
+						sw.Write(mat[i, j]);
+					}
+					else
+					{
+						sw.Write(mat[i,j] + " ");
+					}
+				}
+				if (i != N-1)
+				{
+					sw.Write("\n");
+				}
+			}
+		sw.Flush();
+		sw.Close();
+		}
 
 		// Remove Randomly K digits to make game
 		removeKDigits();
@@ -180,6 +212,97 @@ public class Sudoku
 		}
 	}
 
+	public void chooseEvenOdd(int actualIter)
+	{
+
+		List<(int, int)> evenArray = new List<(int, int)>();
+		List<(int, int)> oddArray = new List<(int, int)>();
+
+		Random rnd = new Random();
+
+		List<(int, int)> randomVals = new List<(int, int)>();
+
+		for (int num = 0; num < 50; num++)
+		{
+			(int, int) randomTuple = (rnd.Next(0, 9), rnd.Next(0, 9));
+
+			if (!randomVals.Contains(randomTuple))
+			{
+				randomVals.Add(randomTuple);
+			}
+		}
+
+		foreach ((int, int) val in randomVals)
+		{
+			//Console.WriteLine(val);
+
+			if (mat[val.Item1, val.Item2] % 2 == 0)
+			{
+				if (evenArray.Count < EO + 1)
+				{
+					evenArray.Add(val);
+				}
+			}
+			else
+			{
+				if (oddArray.Count < EO + 1)
+				{
+					oddArray.Add(val);
+				}
+			}
+		}
+
+		string path = @"OUTPUTSUDOKU\EvenOdd\" + actualIter.ToString() + ".txt";
+		using (StreamWriter sw = File.CreateText(path))
+		{
+			foreach ((int, int) even in evenArray)
+			{
+				sw.WriteLine(string.Format("{0}, {1}", even.Item1, even.Item2));
+			}
+			sw.WriteLine(";");
+			foreach ((int, int) odd in oddArray)
+			{
+				sw.WriteLine(string.Format("{0}, {1}", odd.Item1, odd.Item2));
+			}
+		}
+
+
+		
+		//int count = 0;
+
+
+		/*do
+		{
+			if (mat[randomI, randomJ] % 2 == 0)
+			{
+				if (evenArray.Count(s => s != (0, 0)) < EO)
+				{
+					//Console.WriteLine((randomI, randomJ));
+					evenArray[Array.FindIndex(evenArray, i => i == (0, 0))] = (randomI, randomJ);
+				}
+			}
+			else
+			{
+				if (oddArray.Count(s => s != (0, 0)) < EO)
+				{
+					//Console.WriteLine((randomI, randomJ));
+					oddArray[Array.FindIndex(oddArray, i => i == (0, 0))] = (randomI, randomJ);
+				}
+			}
+
+			count++;
+		} while (evenArray.Count(s => s != (0, 0)) < EO && oddArray.Count(s => s != (0, 0)) < EO);
+	*/
+		foreach ((int, int) tup in evenArray)
+		{
+			Console.WriteLine(tup);
+			Console.WriteLine(mat[tup.Item1, tup.Item2]);
+		}
+
+		
+
+	}
+
 	// Print sudoku
 	public void printSudoku()
 	{
@@ -192,14 +315,48 @@ public class Sudoku
 		Console.WriteLine();
 	}
 
+	public void unsolvedPrintSudoku(int actualIter)
+    {
+        string path = @"OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+        using (StreamWriter sw = File.CreateText(path))
+        {
+            for (int i = 0; i<N; i++)
+            {
+                for (int j = 0; j<N; j++)
+                {
+                    if (j == N-1)
+                    {
+                        sw.Write(mat[i, j]);
+                    }
+                    else
+                    {
+                        sw.Write(mat[i,j] + " ");
+                    }
+                }
+                if (i != N-1)
+                {
+                    sw.Write("\n");
+                }
+            }
+        sw.Flush();
+        sw.Close();
+        }
+    }
+
 	// Driver code
 	public static void Main(string[] args)
 	{
-		int N = 9, K = 20;
-		Sudoku sudoku = new Sudoku(N, K);
-		sudoku.fillValues();
-		sudoku.printSudoku();
+		int N = 9, K = 0, EO = 10;
+
+		for (int gen = 0; gen < 1; gen++)
+		{
+			Sudoku sudoku = new Sudoku(N, K, EO);
+			sudoku.fillValues(gen + 1);
+			sudoku.chooseEvenOdd(gen + 1);
+			sudoku.unsolvedPrintSudoku(gen + 1);
+			sudoku.printSudoku();
+		}
 	}
 }
 
-// This code is contributed by rrrtnx.
+// This code is contributed by rrrtnx. Edited by hydraxic to make Even and Odd Sudoku.

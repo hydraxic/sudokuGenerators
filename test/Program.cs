@@ -255,17 +255,14 @@ public class Sudoku
 		string path = @"OUTPUTSUDOKU\EvenOdd\" + actualIter.ToString() + ".txt";
 		using (StreamWriter sw = File.CreateText(path))
 		{
-
-			Regex pattern = new Regex("()");
-
 			foreach ((int, int) even in evenArray)
 			{
-				sw.WriteLine(pattern.Replace(even.ToString(), ""));
+				sw.WriteLine(string.Format("{0}, {1}", even.Item1, even.Item2));
 			}
-			sw.WriteLine(",");
+			sw.WriteLine(";");
 			foreach ((int, int) odd in oddArray)
 			{
-				sw.WriteLine(pattern.Replace(odd.ToString(), ""));
+				sw.WriteLine(string.Format("{0}, {1}", odd.Item1, odd.Item2));
 			}
 		}
 
