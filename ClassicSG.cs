@@ -1,4 +1,4 @@
-﻿/* C# program for Sudoku generator */
+/* C# program for Sudoku generator */
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +32,7 @@ public class Sudoku
 		// Fill remaining blocks
 		fillRemaining(0, SRN);
 
-        string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+        string path = @"Documents\OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
@@ -210,7 +210,7 @@ public class Sudoku
 	// Print sudoku
 	public void printSudoku(int actualIter)
 	{
-		string path = @"OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+		string path = @"Documents\OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
