@@ -10,6 +10,9 @@ public class Sudoku
 	int SRN; // square root of N
 	int K; // No. Of missing digits
 
+	(int, int)[] asteriskSquares;
+	int[] oneToNine;
+
 	// Constructor
 	public Sudoku(int N, int K)
 	{
@@ -26,6 +29,27 @@ public class Sudoku
 	// Sudoku Generator
 	public void fillValues(int actualIter)
 	{
+
+		asteriskSquares = new (int, int)[]
+		{
+			(2, 2),
+			(1, 4),
+			(2, 6),
+			(4, 1),
+			(4, 4),
+			(4, 7),
+			(6, 2),
+			(6, 6),
+			(7, 4)
+		};
+
+		oneToNine = new int[]
+		{
+			1, 2, 3, 4, 5, 6, 7, 8, 9
+		};// tbh this looks really useless
+
+
+
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
 
@@ -61,6 +85,19 @@ public class Sudoku
 		removeKDigits();
 	}
 
+	void fillAsterisk()
+	{
+		var rng = new Random();
+		rng.Shuffle(oneToNine);
+
+		int count = 0;
+		foreach ((int, int) position in asteriskSquares)
+		{
+			mat[position.Item1, position.Item2] = oneToNine[count];
+			count++;
+		}
+	}
+
 	// Fill the diagonal SRN number of SRN x SRN matrices
 	void fillDiagonal()
 	{
@@ -90,13 +127,17 @@ public class Sudoku
 		{
 			for (int j=0; j<SRN; j++)
 			{
-				do
+				Console.WriteLine(mat[row+i, col+j]);
+				if (mat[row+i, col+j] == 0)
 				{
-					num = randomGenerator(N);
-				}
-				while (!unUsedInBox(row, col, num));
+					do
+					{
+						num = randomGenerator(N);
+					}
+					while (!unUsedInBox(row, col, num));
 
-				mat[row+i,col+j] = num;
+					mat[row+i,col+j] = num;
+				}
 			}
 		}
 	}
@@ -248,6 +289,21 @@ public class Sudoku
             sudoku.printSudoku(i + 1);
         }
 	}
+}
+
+static class RandomExtensions
+{
+    public static void Shuffle<T> (this Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
 }
 
 // This code is contributed by rrrtnx.
