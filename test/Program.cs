@@ -24,7 +24,7 @@ public class Sudoku
 	}
 
 	// Sudoku Generator
-	public void fillValues(int actualIter)
+	public void fillValues(int actualIter, string diff)
 	{
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
@@ -32,7 +32,7 @@ public class Sudoku
 		// Fill remaining blocks
 		fillRemaining(0, SRN);
 
-        string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+        /*string path = string.Format(@"D:\OUTPUTSUDOKU\ClassicSudoku\{0}\Solved\{1}.txt", diff, actualIter.ToString());
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
@@ -56,7 +56,7 @@ public class Sudoku
         sw.Flush();
         sw.Close();
         }
-
+*/
 		// Remove Randomly K digits to make game
 		removeKDigits();
 	}
@@ -185,32 +185,26 @@ public class Sudoku
 	// Remove the K no. of digits to
 	// complete game
 	public void removeKDigits()
-	{
-		int count = K;
-		while (count != 0)
-		{
-			int cellId = randomGenerator(N*N)-1;
-
-			// System.out.println(cellId);
-			// extract coordinates i and j
-			int i = (cellId/N);
-			int j = cellId%9;
-			if (j != 0)
-				j = j - 1;
-
-			// System.out.println(i+" "+j);
-			if (mat[i,j] != 0)
+    {
+        int countK = K;
+        while (countK != 0)
+        {
+            Random r = new Random(); 
+			int cr = r.Next(mat.GetLength(0));
+			int rr = r.Next(mat.GetLength(1));
+            if (mat[cr, rr] != 0)
 			{
-				count--;
-				mat[i,j] = 0;
+				mat[cr, rr] = 0;
+				countK--;
 			}
-		}
-	}
+            
+        }
+    }
 
 	// Print sudoku
-	public void printSudoku(int actualIter)
+	public void printSudoku(int actualIter, string diff)
 	{
-		string path = @"OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+		string path = string.Format(@"D:\OUTPUTSUDOKU\ClassicSudoku\{0}\Unsolved\{1}.txt", diff, actualIter.ToString());
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
@@ -239,13 +233,14 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
-
-        for (int i = 0; i < 1; i++)
+		Random rnd = new Random();
+		string dif = "Death";
+        for (int i = 0; i < 500; i++)
         {
-            int N = 9, K = 20;
+            int N = 9, K = 70;
             Sudoku sudoku = new Sudoku(N, K);
-            sudoku.fillValues(i + 1);
-            sudoku.printSudoku(i + 1);
+            sudoku.fillValues(i + 1, dif);
+            sudoku.printSudoku(i + 1, dif);
         }
 	}
 }
