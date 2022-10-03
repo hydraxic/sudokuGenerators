@@ -48,13 +48,12 @@ public class Sudoku
 			1, 2, 3, 4, 5, 6, 7, 8, 9
 		};// tbh this looks really useless
 
-
-
+		fillAsterisk();
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
 
 		// Fill remaining blocks
-		fillRemaining(0, SRN);
+		fillRemaining(0, SRN, false);
 
         string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
         using (StreamWriter sw = File.CreateText(path))
@@ -90,10 +89,17 @@ public class Sudoku
 		var rng = new Random();
 		rng.Shuffle(oneToNine);
 
+		/*foreach (int num in oneToNine)
+		{
+			Console.Write(num);
+		}
+		Console.WriteLine();*/
+
 		int count = 0;
 		foreach ((int, int) position in asteriskSquares)
 		{
 			mat[position.Item1, position.Item2] = oneToNine[count];
+			//Console.WriteLine(oneToNine[count]);
 			count++;
 		}
 	}
@@ -177,7 +183,7 @@ public class Sudoku
 
 	// A recursive function to fill remaining
 	// matrix
-	bool fillRemaining(int i, int j)
+	/*bool fillRemaining(int i, int j)
 	{
 		// System.out.println(i+" "+j);
 		if (j>=N && i<N-1)
@@ -209,19 +215,100 @@ public class Sudoku
 			}
 		}
 
-		for (int num = 1; num<=N; num++)
+		if (mat[i, j] == 0)
 		{
-			if (CheckIfSafe(i, j, num))
+			for (int num = 1; num<=N; num++)
 			{
-				mat[i,j] = num;
-				if (fillRemaining(i, j+1))
-					return true;
+				if (CheckIfSafe(i, j, num))
+				{
+					mat[i,j] = num;
+					if (fillRemaining(i, j+1))
+						return true;
 
-				mat[i,j] = 0;
+					//mat[i,j] = 0;
+				}
 			}
 		}
+		else
+		{
+			if (fillRemaining(i, j + 1)) { return true; }
+		}
+
 		return false;
-	}
+	}*/
+	int counter2 = 0;
+    //bool exit = false;
+    int fillRemaining(int i, int j, bool exit)
+    {
+        /*if (exit)
+        {
+            return 0;
+        }*/
+        if (j>=N && i<N-1)
+        {
+            i = i + 1;
+            j = 0;
+        }
+        if (i>=N && j>=N)
+            return 1;
+ 
+        if (i < SRN)
+        {
+            if (j < SRN)
+                j = SRN;
+        }
+        else if (i < N-SRN)
+        {
+            if (j==(int)(i/SRN)*SRN)
+                j =  j + SRN;
+        }
+        else
+        {
+            if (j == N-SRN)
+            {
+                i = i + 1;
+                j = 0;
+                if (i>=N)
+                    return 1;
+            }
+        }
+ 
+        counter2++;
+        //  Console.WriteLine(counter2);
+        if (counter2 >= 7500)
+        {
+            //  Console.WriteLine("is over 7500");
+            return 0;
+        }
+
+        //(double, int) gridLocation2 = (i, j);
+        //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        if (mat[i, j] == 0)
+        {
+            for (int num = 1; num<=N; num++)
+            {
+                if (CheckIfSafe(i, j, num))
+                {
+                    mat[i,j] = num;
+                    if (fillRemaining(i, j+1, false) == 1)
+                        return 1;
+                    mat[i, j] = 0;
+                    //exit = true;
+                    //return 2;
+                }
+                //else {return false}
+            }
+            //return 0;
+        }
+        else
+        {
+            if (fillRemaining(i, j+1, false) == 1)
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
 
 	// Remove the K no. of digits to
 	// complete game
