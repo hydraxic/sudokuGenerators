@@ -84,7 +84,7 @@ public class Sudoku
     }
  
     // Sudoku Generator
-    public bool fillValues(int actualIter)
+    public bool fillValues(int actualIter, string diff)
     {
         mat = new int[N,N];
         sMat = new int[N, N];
@@ -185,7 +185,7 @@ public class Sudoku
         if (CheckIfComplete() == true)
         {
             
-            string path = @"D:\OUTPUTSUDOKU\XSudoku\Solved\" + actualIter.ToString() + ".txt";
+            /*string path = string.Format(@"D:\OUTPUTSUDOKU\XSudoku\{0}\Solved\{1}.txt", diff, actualIter.ToString());
             using (StreamWriter sw = File.CreateText(path))
             {
                 for (int i = 0; i<N; i++)
@@ -208,7 +208,7 @@ public class Sudoku
                 }
             sw.Flush();
             sw.Close();
-            }
+            }*/
             RemoveKDigitsV2();
             return true;
         }
@@ -513,8 +513,14 @@ public class Sudoku
         while (countK != 0)
         {
             Random r = new Random(); 
-            mat[r.Next(mat.GetLength(0)), r.Next(mat.GetLength(1))] = 0;
-            countK--;
+			int cr = r.Next(mat.GetLength(0));
+			int rr = r.Next(mat.GetLength(1));
+            if (mat[cr, rr] != 0)
+			{
+				mat[cr, rr] = 0;
+				countK--;
+			}
+            
         }
     }
 
@@ -587,9 +593,9 @@ public class Sudoku
         Console.WriteLine("unsolvable");
     }
 
-    public void unsolvedPrintSudoku2(int actualIter)
+    public void unsolvedPrintSudoku2(int actualIter, string diff)
     {
-        string path = @"D:\OUTPUTSUDOKU\XSudoku\Unsolved\" + actualIter.ToString() + ".txt";
+        string path = string.Format(@"D:\OUTPUTSUDOKU\XSudoku\{0}\Unsolved\{1}.txt", diff, actualIter.ToString());
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
@@ -619,15 +625,17 @@ public class Sudoku
     public static void Main(string[] args)
     {
         int actualIter = 1;
-        for (int gen = 0; gen < 100; gen++)
+		string dif = "Very Easy";
+		Random rnd = new Random();
+        for (int gen = 0; gen < 900; gen++)
         {
-            int N = 9, K = 60;
+            int N = 9, K = rnd.Next(40, 45); //50-55, 55-60, 65, 70, 73
             Sudoku sudoku = new Sudoku(N, K);
-            if (sudoku.fillValues(actualIter) == true)
+            if (sudoku.fillValues(actualIter, dif) == true)
             {
                 actualIter++;
                 //sudoku.printSudoku(actualIter);
-                sudoku.unsolvedPrintSudoku2(actualIter-1);
+                sudoku.unsolvedPrintSudoku2(actualIter-1, dif);
             }
         }
     }

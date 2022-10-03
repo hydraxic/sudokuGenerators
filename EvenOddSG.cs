@@ -37,7 +37,7 @@ public class Sudoku
 		fillRemaining(0, SRN);
 
 
-		string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
+		/*string path = @"OUTPUTSUDOKU\Solved\" + actualIter.ToString() + ".txt";
 		using (StreamWriter sw = File.CreateText(path))
 		{
 			for (int i = 0; i<N; i++)
@@ -61,7 +61,7 @@ public class Sudoku
 		sw.Flush();
 		sw.Close();
 		}
-
+*/
 		// Remove Randomly K digits to make game
 		removeKDigits();
 	}
@@ -212,7 +212,7 @@ public class Sudoku
 		}
 	}
 
-	public void chooseEvenOdd(int actualIter)
+	public void chooseEvenOdd(int actualIter, string diff)
 	{
 
 		List<(int, int)> evenArray = new List<(int, int)>();
@@ -252,7 +252,7 @@ public class Sudoku
 			}
 		}
 
-		string path = @"OUTPUTSUDOKU\EvenOdd\" + actualIter.ToString() + ".txt";
+		string path = string.Format(@"OUTPUTSUDOKU\EvenOddSudoku\{0}\EvenOdd\{1}.txt", diff, actualIter);
 		using (StreamWriter sw = File.CreateText(path))
 		{
 			foreach ((int, int) even in evenArray)
@@ -315,9 +315,9 @@ public class Sudoku
 		Console.WriteLine();
 	}
 
-	public void unsolvedPrintSudoku(int actualIter)
+	public void unsolvedPrintSudoku(int actualIter, string diff)
     {
-        string path = @"OUTPUTSUDOKU\Unsolved\" + actualIter.ToString() + ".txt";
+        string path = string.Format(@"OUTPUTSUDOKU\EvenOddSudoku\{0}\Unsolved\{1}.txt", diff, actualIter);
         using (StreamWriter sw = File.CreateText(path))
         {
             for (int i = 0; i<N; i++)
@@ -346,17 +346,22 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
-		int N = 9, K = 0, EO = 10;
+		Random rnd = new Random();
+
+		int N = 9, K = rnd.Next(30, 35), EO = 10;
+		string dif = "Very Easy";
 
 		for (int gen = 0; gen < 1; gen++)
 		{
 			Sudoku sudoku = new Sudoku(N, K, EO);
-			sudoku.fillValues(gen + 1);
+			sudoku.fillValues(gen + 1, dif);
 			sudoku.chooseEvenOdd(gen + 1);
-			sudoku.unsolvedPrintSudoku(gen + 1);
+			sudoku.unsolvedPrintSudoku(gen + 1, dif);
 			sudoku.printSudoku();
 		}
 	}
 }
+
+// andahfanfknfdf812moiro2f42i f34if89rfcataraqui3getg dr. 1209asnbdfoyw8 ashfordf3ihg78fh r32place
 
 // This code is contributed by rrrtnx. Edited by hydraxic to make Even and Odd Sudoku.
