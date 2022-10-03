@@ -362,6 +362,5 @@ public class Sudoku
 	}
 }
 
-// andahfanfknfdf812moiro2f42i f34if89rfcataraqui3getg dr. 1209asnbdfoyw8 ashfordf3ihg78fh r32place
 
 // This code is contributed by rrrtnx. Edited by hydraxic to make Even and Odd Sudoku.
