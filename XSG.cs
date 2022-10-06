@@ -628,16 +628,17 @@ public class Sudoku
 		string[] difs = new string[]
         {
             "Very Easy", "Easy", "Medium", "Hard", "Very Hard", "Death"
-        }//"Very Easy";
+        };//"Very Easy";
         int[] difnum = new int[]
         {
             35, 40, 45, 50, 55, 60
-        }
+        };
 
         int dc = 0;
 
         foreach (string dif in difs)
         {
+            actualIter = 1;
             for (int gen = 0; gen < 900; gen++)
             {
                 int N = 9, K = difnum[dc]; //50-55, 55-60, 65, 70, 73

@@ -233,15 +233,28 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
-		Random rnd = new Random();
-		string dif = "Death";
-        for (int i = 0; i < 500; i++)
+		string[] difs = new string[]
         {
-            int N = 9, K = 70;
-            Sudoku sudoku = new Sudoku(N, K);
-            sudoku.fillValues(i + 1, dif);
-            sudoku.printSudoku(i + 1, dif);
-        }
+            "Very Easy", "Easy", "Medium", "Hard", "Very Hard", "Death"
+        };//"Very Easy";
+        int[] difnum = new int[]
+        {
+            35, 40, 45, 50, 55, 60
+        };
+
+        int dc = 0;
+
+		foreach (string dif in difs)
+		{
+			for (int i = 0; i < 500; i++)
+			{
+				int N = 9, K = difnum[dc];
+				Sudoku sudoku = new Sudoku(N, K);
+				sudoku.fillValues(i + 1, dif);
+				sudoku.printSudoku(i + 1, dif);
+			}
+			dc++;
+		}
 	}
 }
 
