@@ -625,18 +625,33 @@ public class Sudoku
     public static void Main(string[] args)
     {
         int actualIter = 1;
-		string dif = "Very Easy";
-		Random rnd = new Random();
-        for (int gen = 0; gen < 900; gen++)
+		string[] difs = new string[]
         {
-            int N = 9, K = rnd.Next(40, 45); //50-55, 55-60, 65, 70, 73
-            Sudoku sudoku = new Sudoku(N, K);
-            if (sudoku.fillValues(actualIter, dif) == true)
-            {
-                actualIter++;
-                //sudoku.printSudoku(actualIter);
-                sudoku.unsolvedPrintSudoku2(actualIter-1, dif);
-            }
+            "Very Easy", "Easy", "Medium", "Hard", "Very Hard", "Death"
+        }//"Very Easy";
+        int[] difnum = new int[]
+        {
+            35, 40, 45, 50, 55, 60
         }
+
+        int dc = 0;
+
+        foreach (string dif in difs)
+        {
+            for (int gen = 0; gen < 900; gen++)
+            {
+                int N = 9, K = difnum[dc]; //50-55, 55-60, 65, 70, 73
+                Sudoku sudoku = new Sudoku(N, K);
+                if (sudoku.fillValues(actualIter, dif) == true)
+                {
+                    actualIter++;
+                    //sudoku.printSudoku(actualIter);
+                    sudoku.unsolvedPrintSudoku2(actualIter-1, dif);
+                }
+            }
+            dc++;
+        }
+
+        Console.WriteLine(actualIter);
     }
 }
