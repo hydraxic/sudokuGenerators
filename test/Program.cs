@@ -26,8 +26,38 @@ public class Sudoku
 	// Sudoku Generator
 	public void fillValues(int actualIter, string diff)
 	{
+
+		(int, int)[] asteriskValues = new (int, int)[]
+		{
+			(1, 4),
+			(2, 2),
+			(2, 6),
+			(4, 1),
+			(4, 4),
+			(4, 7),
+			(6, 2),
+			(6, 6),
+			(7, 4)
+		};
+
+		// example
+
+		// 0 0 0 0 0 0 0 0 0
+		// 0 0 0 0 1 0 0 0 0
+		// 0 0 2 0 0 0 3 0 0
+		// 0 0 0 0 0 0 0 0 0
+		// 0 4 0 0 9 0 0 5 0
+		// 0 0 0 0 0 0 0 0 0
+		// 0 0 6 0 0 0 7 0 0
+		// 0 0 0 0 8 0 0 0 0
+		// 0 0 0 0 0 0 0 0 0
+
+		fillAsterisk(asteriskValues);
+		//logSudoku();
+
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
+		logSudoku();
 
 		// Fill remaining blocks
 		fillRemaining(0, SRN);
@@ -56,9 +86,22 @@ public class Sudoku
         sw.Flush();
         sw.Close();
         }
-*/
+*/		
 		// Remove Randomly K digits to make game
 		removeKDigits();
+	}
+
+	void fillAsterisk((int, int)[] asterisks)
+	{
+		int[] nums = {1,2,3,4,5,6,7,8,9};
+		Random rng = new Random();
+		rng.Shuffle(nums);
+		int c = 0;
+		foreach ((int, int) coord in asterisks)
+		{
+			mat[coord.Item1, coord.Item2] = nums[c];
+			c++;
+		}
 	}
 
 	// Fill the diagonal SRN number of SRN x SRN matrices
@@ -90,13 +133,16 @@ public class Sudoku
 		{
 			for (int j=0; j<SRN; j++)
 			{
-				do
+				if (mat[row + i, col + j] == 0)
 				{
-					num = randomGenerator(N);
-				}
-				while (!unUsedInBox(row, col, num));
+					do
+					{
+						num = randomGenerator(N);
+					}
+					while (!unUsedInBox(row, col, num));
 
-				mat[row+i,col+j] = num;
+					mat[row+i,col+j] = num;
+				}
 			}
 		}
 	}
@@ -230,6 +276,29 @@ public class Sudoku
         }
 	}
 
+	public void logSudoku()
+	{
+		for (int i = 0; i<N; i++)
+		{
+			for (int j = 0; j<N; j++)
+			{
+				if (j == N-1)
+				{
+					Console.Write(mat[i, j]);
+				}
+				else
+				{
+					Console.Write(mat[i,j] + " ");
+				}
+			}
+			if (i != N-1)
+			{
+				Console.Write("\n");
+			}
+		}
+		Console.WriteLine();
+	}
+
 	// Driver code
 	public static void Main(string[] args)
 	{
@@ -246,12 +315,12 @@ public class Sudoku
 
 		foreach (string dif in difs)
 		{
-			for (int i = 0; i < 500; i++)
+			for (int i = 0; i < 1; i++)
 			{
 				int N = 9, K = difnum[dc];
 				Sudoku sudoku = new Sudoku(N, K);
 				sudoku.fillValues(i + 1, dif);
-				sudoku.printSudoku(i + 1, dif);
+				//sudoku.printSudoku(i + 1, dif);
 			}
 			dc++;
 		}
@@ -259,3 +328,18 @@ public class Sudoku
 }
 
 // This code is contributed by rrrtnx.
+
+static class RandomExtensions
+{
+    public static void Shuffle<T> (this Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+}

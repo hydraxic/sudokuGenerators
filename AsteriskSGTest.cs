@@ -87,6 +87,18 @@ public class Sudoku
 		removeKDigits();
 	}
 
+	void fillAsterisk((int, int)[] asterisks)
+	{
+		Random rng = new Random();
+		int[] snums = rng.Shuffle({1,2,3,4,5,6,7,8,9});
+		int c = 0;
+		foreach ((int, int) coord in asterisks)
+		{
+			mat[coord.Item1, coord.Item2] = snums[c];
+			c++;
+		}
+	}
+
 	// Fill the diagonal SRN number of SRN x SRN matrices
 	void fillDiagonal()
 	{
@@ -256,19 +268,70 @@ public class Sudoku
         }
 	}
 
+	public void logSudoku()
+	{
+		for (int i = 0; i<N; i++)
+		{
+			for (int j = 0; j<N; j++)
+			{
+				if (j == N-1)
+				{
+					Console.Write(mat[i, j]);
+				}
+				else
+				{
+					Console.Write(mat[i,j] + " ");
+				}
+			}
+			if (i != N-1)
+			{
+				Console.Write("\n");
+			}
+		}
+		Console.WriteLine();
+	}
+
 	// Driver code
 	public static void Main(string[] args)
 	{
-		Random rnd = new Random();
-		string dif = "Death";
-        for (int i = 0; i < 500; i++)
+		string[] difs = new string[]
         {
-            int N = 9, K = 70;
-            Sudoku sudoku = new Sudoku(N, K);
-            sudoku.fillValues(i + 1, dif);
-            sudoku.printSudoku(i + 1, dif);
-        }
+            "Very Easy", "Easy", "Medium", "Hard", "Very Hard", "Death"
+        };//"Very Easy";
+        int[] difnum = new int[]
+        {
+            35, 40, 45, 50, 55, 60
+        };
+
+        int dc = 0;
+
+		foreach (string dif in difs)
+		{
+			for (int i = 0; i < 1; i++)
+			{
+				int N = 9, K = difnum[dc];
+				Sudoku sudoku = new Sudoku(N, K);
+				sudoku.fillValues(i + 1, dif);
+				//sudoku.printSudoku(i + 1, dif);
+			}
+			dc++;
+		}
 	}
 }
 
 // This code is contributed by rrrtnx.
+
+static class RandomExtensions
+{
+    public static void Shuffle<T> (this Random rng, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+}
