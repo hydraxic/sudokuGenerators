@@ -57,10 +57,11 @@ public class Sudoku
 
 		// Fill the diagonal of SRN x SRN matrices
 		fillDiagonal();
-		logSudoku();
 
 		// Fill remaining blocks
 		fillRemaining(0, SRN);
+
+		logSudoku();
 
         /*string path = string.Format(@"D:\OUTPUTSUDOKU\ClassicSudoku\{0}\Solved\{1}.txt", diff, actualIter.ToString());
         using (StreamWriter sw = File.CreateText(path))
@@ -214,17 +215,25 @@ public class Sudoku
 			}
 		}
 
-		for (int num = 1; num<=N; num++)
-		{
-			if (CheckIfSafe(i, j, num))
-			{
-				mat[i,j] = num;
-				if (fillRemaining(i, j+1))
-					return true;
+		if (mat[i, j] != 0)
+		{ if (fillRemaining(i, j+1)) { return true; } }
 
-				mat[i,j] = 0;
+		if (mat[i, j] == 0)
+		{
+			for (int num = 1; num<=N; num++)
+			{
+				if (CheckIfSafe(i, j, num))
+				{
+					//Console.WriteLine("H");
+					mat[i,j] = num;
+					if (fillRemaining(i, j+1))
+						return true;
+
+					mat[i,j] = 0;
+				}
 			}
 		}
+
 		return false;
 	}
 
@@ -302,6 +311,16 @@ public class Sudoku
 	// Driver code
 	public static void Main(string[] args)
 	{
+		
+		for (int i = 0; i < 1; i++)
+		{
+			int N = 9, K = 0;
+			Sudoku sudoku = new Sudoku(N, K);
+			sudoku.fillValues(i + 1, "test");
+			//sudoku.printSudoku(i + 1, dif);
+		}
+
+		/*
 		string[] difs = new string[]
         {
             "Very Easy", "Easy", "Medium", "Hard", "Very Hard", "Death"
@@ -324,6 +343,7 @@ public class Sudoku
 			}
 			dc++;
 		}
+		*/
 	}
 }
 
