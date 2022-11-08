@@ -59,7 +59,7 @@ public class Sudoku
 		fillDiagonal();
 
 		// Fill remaining blocks
-		fillRemaining(0, SRN);
+		fillRemaining();//0, SRN, false);
 
 		logSudoku();
 
@@ -183,6 +183,8 @@ public class Sudoku
 
 	// A recursive function to fill remaining
 	// matrix
+	
+	/*
 	bool fillRemaining(int i, int j)
 	{
 		// System.out.println(i+" "+j);
@@ -236,6 +238,108 @@ public class Sudoku
 
 		return false;
 	}
+*/
+/*
+	int counter2 = 0;
+    //bool exit = false;
+    int fillRemaining(int i, int j, bool exit)
+    {
+        /*if (exit)
+        {
+            return 0;
+        }
+        if (j>=N && i<N-1)
+        {
+            i = i + 1;
+            j = 0;
+        }
+        if (i>=N && j>=N)
+            return 1;
+ 
+        if (i < SRN)
+        {
+            if (j < SRN)
+                j = SRN;
+        }
+        else if (i < N-SRN)
+        {
+            if (j==(int)(i/SRN)*SRN)
+                j =  j + SRN;
+        }
+        else
+        {
+            if (j == N-SRN)
+            {
+                i = i + 1;
+                j = 0;
+                if (i>=N)
+                    return 1;
+            }
+        }
+ 
+        counter2++;
+        //Console.WriteLine(counter2);
+        if (counter2 >= 20000)
+        {
+            //  Console.WriteLine("is over 7500");
+            return 0;
+        }
+
+        //(double, int) gridLocation2 = (i, j);
+        //if (!(Array.Exists(doNotOverwriteGrids, element => element == gridLocation2)))
+        if (mat[i, j] == 0)
+        {
+            for (int num = 1; num<=N; num++)
+            {
+                if (CheckIfSafe(i, j, num))
+                {
+                    mat[i,j] = num;
+                    if (fillRemaining(i, j+1, false) == 1)
+                        return 1;
+                    mat[i, j] = 0;
+                    //exit = true;
+                    //return 2;
+                }
+                //else {return false}
+            }
+            //return 0;
+        }
+        else
+        {
+            if (fillRemaining(i, j+1, false) == 1)
+            {
+                return 1;
+            }
+        }
+		//Console.WriteLine(counter2);
+        return 0;
+    }
+
+*/
+
+	void fillRemaining()
+    {
+        for (var y = 8; y >= 0; y--)
+        {
+            for (var x = 8; x >= 0; x--)
+            {
+                var a = mat[y, x];
+                if (a == 0)
+                {
+                    for (var n = 1; n <= 9; n++)
+                    {
+                        if (CheckIfSafe(y, x, n))
+                        {
+                            mat[y, x] = n;
+                            fillRemaining();
+                            mat[y, x] = 0;
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+    }
 
 	// Remove the K no. of digits to
 	// complete game
@@ -312,7 +416,7 @@ public class Sudoku
 	public static void Main(string[] args)
 	{
 		
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			int N = 9, K = 0;
 			Sudoku sudoku = new Sudoku(N, K);
