@@ -340,6 +340,9 @@ public class Sudoku
             }
         }
     }
+	
+	
+	
 
 	// Remove the K no. of digits to
 	// complete game
