@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj": {}
+    "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\test.csproj": {}
   },
   "projects": {
-    "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj": {
+    "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\test.csproj",
         "projectName": "test",
-        "projectPath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
+        "projectPath": "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\test.csproj",
         "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\obj\\",
+        "outputPath": "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "net7.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {}
           }
         },
@@ -35,15 +35,16 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -52,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

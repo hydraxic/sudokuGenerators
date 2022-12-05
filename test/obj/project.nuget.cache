@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "844mcRM9KmZPeMUavmIM9i1zJbcdU0AtZfNejq++Tuyj0Bw+cxofaFqwRlVr8NVnEHNos7B0ah3r2OltpSRzPA==",
+  "dgSpecHash": "ilPbCNNste8oEOY9Yw0lEAZlFUcksawbvuWIVW/a+s+N94kE0XC2tVGrUjBFyeC6abOTjoRZMe74Jpv+v800Vg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\samue\\Documents\\diagonalSudokuGenerator\\test\\test.csproj",
+  "projectFilePath": "C:\\Users\\samue\\Documents\\GitHub\\sudokuGenerators\\test\\test.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

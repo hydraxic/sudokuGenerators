@@ -1,7 +1,3 @@
-﻿// BUILT USING OPEN AI'S CHATGPT. STILL TESTING AND DOES NOT WORK RIGHT NOW.
-
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +9,6 @@ namespace HyperSudokuGenerator
         // Define constants for the size of the grid and sub-grids
         const int GRID_SIZE = 9;
         const int SUBGRID_SIZE = 3;
-
-        // Define a constant for the number of regions in the hyper sudoku grid
-        const int NUM_REGIONS = 4;
-
 
         // Define a 2D array to represent the sudoku grid
         static int[,] grid = new int[GRID_SIZE, GRID_SIZE];
@@ -44,12 +36,6 @@ namespace HyperSudokuGenerator
                 return true;
             }
 
-            // Check if the current position is valid
-            if (row >= GRID_SIZE || col >= GRID_SIZE)
-            {
-                return false;
-            }
-
             // If the current cell is not empty, move to the next cell
             if (grid[row, col] != 0)
             {
@@ -57,7 +43,7 @@ namespace HyperSudokuGenerator
             }
 
             // Try filling in the current cell with a number from 1-9
-            for (int num = 1; num <= GRID_SIZE; num++)
+            for (int num = 1; num <= 9; num++)
             {
                 // Check if the number is valid for the current position
                 if (IsValid(grid, row, col, num))
@@ -77,26 +63,16 @@ namespace HyperSudokuGenerator
         }
 
         // Define a function to check if a number is valid for a given position in the grid
-        static bool IsValid(int[,] grid, int row, int col, int num)
+        bool IsValid(int[,] grid, int row, int col, int num)
         {
-            // Check if the number appears in the same row, column, 3x3 block, or 9x9 region
+            // Check if the number appears in the same row, column, 3x3 block, or hyper-region
             for (int i = 0; i < GRID_SIZE; i++)
             {
-                if (grid[row, i] == num || grid[i, col] == num || grid[(row / SUBGRID_SIZE) * SUBGRID_SIZE + i / SUBGRID_SIZE, (col / SUBGRID_SIZE) * SUBGRID_SIZE + i % SUBGRID_SIZE] == num || grid[(row / (GRID_SIZE / NUM_REGIONS)) * (GRID_SIZE / NUM_REGIONS) + (i / (GRID_SIZE / NUM_REGIONS)), (col / (GRID_SIZE / NUM_REGIONS)) * (GRID_SIZE / NUM_REGIONS) + (i % (GRID_SIZE / NUM_REGIONS))] == num)
+                if (grid[row, i] == num || grid[i, col] == num || grid[(row / SUBGRID_SIZE) * SUBGRID_SIZE + i / SUBGRID_SIZE, (col / SUBGRID_SIZE) * SUBGRID_SIZE + i % SUBGRID_SIZE] == num)
                 {
                     return false;
                 }
             }
-
-            // Check if the number appears in the same row or column
-            for (int i = 0; i < GRID_SIZE; i++)
-            {
-                if (grid[row, i] == num || grid[i, col] == num)
-                {
-                    return false;
-                }
-            }
-
             return true;
         }
 
